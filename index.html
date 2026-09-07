@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liga Kandang &mdash; Pencatat Kompetisi Sepakbola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">Liga<strong>Kandang</strong></span>
+    </div>
+    <div class="topbar__auth">
+      <span id="auth-status" class="topbar__tagline">Memuat data&hellip;</span>
+      <button id="btn-show-login" class="btn btn--ghost btn--small">Login Admin</button>
+      <button id="btn-logout" class="btn btn--danger btn--small" hidden>Logout</button>
+    </div>
+  </div>
+</div>
+
+<div id="login-modal" class="login-modal" hidden>
+  <div class="login-modal__box">
+    <h3>Login Admin</h3>
+    <p>Hanya admin yang bisa mengubah skor, tim, dan starting XI. Pengunjung lain tetap bisa melihat semua data tanpa login.</p>
+    <form id="form-login">
+      <div class="field">
+        <label for="login-username">Username</label>
+        <input type="text" id="login-username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" autocomplete="current-password" required>
+      </div>
+      <p id="login-error" class="warning" hidden></p>
+      <div class="login-modal__actions">
+        <button type="button" id="btn-cancel-login" class="btn btn--ghost btn--small">Batal</button>
+        <button type="submit" class="btn btn--primary btn--small">Masuk</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<header class="hero">
+  <h1>Liga Kandang</h1>
+  <p>Catat pertandingan, klasemen &amp; starting XI kompetisimu</p>
+</header>
+
+<nav class="tabs" aria-label="Navigasi bagian aplikasi">
+  <button class="tabs__btn is-active" data-tab="setup">Tim</button>
+  <button class="tabs__btn" data-tab="pertandingan">Pertandingan</button>
+  <button class="tabs__btn" data-tab="klasemen">Table</button>
+  <button class="tabs__btn" data-tab="topskor">Top Skor</button>
+  <button class="tabs__btn" data-tab="startingxi">Starting XI</button>
+</nav>
+
+<main class="app">
+
+  <!-- ================= SETUP TIM ================= -->
+  <section id="tab-setup" class="panel is-active">
+    <div class="panel__head">
+      <h2>Susun Peserta Kompetisi</h2>
+      <p>Tentukan jumlah tim yang bertanding, lalu beri nama masing-masing tim.</p>
+    </div>
+
+    <p id="tim-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk menambah atau mengubah tim.</p>
+
+    <div id="tim-admin-area">
+      <form id="form-jumlah-tim" class="row-inline">
+        <label for="input-jumlah-tim">Jumlah tim</label>
+        <input type="number" id="input-jumlah-tim" min="2" max="32" placeholder="cth. 4" required>
+        <button type="submit" class="btn btn--ghost">Buat Slot Nama</button>
+      </form>
+
+      <div id="slot-nama-tim" class="team-slots" aria-live="polite"></div>
+
+      <div class="panel__actions">
+        <button id="btn-simpan-tim" class="btn btn--primary" type="button" disabled>Simpan Tim &amp; Mulai Kompetisi</button>
+        <button id="btn-reset-semua" class="btn btn--danger" type="button">Reset Semua Data</button>
+      </div>
+    </div>
+
+    <div id="daftar-tim-tersimpan" class="saved-teams"></div>
+  </section>
+
+  <!-- ================= INPUT PERTANDINGAN ================= -->
+  <section id="tab-pertandingan" class="panel">
+    <div class="panel__head">
+      <h2>Catat Hasil Pertandingan</h2>
+      <p>Masukkan skor akhir, lalu daftarkan pencetak gol tiap tim.</p>
+    </div>
+
+    <p id="pertandingan-warning" class="warning" hidden>Simpan minimal 2 tim terlebih dahulu di tab "Tim" sebelum mencatat pertandingan.</p>
+    <p id="pertandingan-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk mencatat pertandingan baru.</p>
+
+    <div id="pertandingan-admin-area">
+      <form id="form-pertandingan" class="match-form">
+        <div class="match-form__teams">
+          <div class="team-side">
+            <label for="select-tim-a">Tim Tuan Rumah</label>
+            <select id="select-tim-a" required></select>
+            <input type="number" id="skor-a" min="0" placeholder="0" required>
+          </div>
+          <div class="match-form__vs">VS</div>
+          <div class="team-side">
+            <label for="select-tim-b">Tim Tamu</label>
+            <select id="select-tim-b" required></select>
+            <input type="number" id="skor-b" min="0" placeholder="0" required>
+          </div>
+        </div>
+
+        <div class="scorers">
+          <div class="scorers__col">
+            <h3>Pencetak Gol &mdash; <span id="label-tim-a">Tim Tuan Rumah</span></h3>
+            <div id="scorer-list-a" class="scorer-list"></div>
+            <button type="button" class="btn btn--ghost btn--small" data-add-scorer="a">+ Tambah Pencetak Gol</button>
+          </div>
+          <div class="scorers__col">
+            <h3>Pencetak Gol &mdash; <span id="label-tim-b">Tim Tamu</span></h3>
+            <div id="scorer-list-b" class="scorer-list"></div>
+            <button type="button" class="btn btn--ghost btn--small" data-add-scorer="b">+ Tambah Pencetak Gol</button>
+          </div>
+        </div>
+
+        <p id="scorer-warning" class="warning" hidden>Jumlah pencetak gol yang dimasukkan tidak sama dengan skor tim tersebut.</p>
+
+        <button type="submit" class="btn btn--primary">Simpan Hasil Pertandingan</button>
+      </form>
+    </div>
+
+    <div class="panel__head panel__head--tight">
+      <h3>Riwayat Pertandingan</h3>
+    </div>
+    <div id="riwayat-pertandingan" class="match-history"></div>
+  </section>
+
+  <!-- ================= KLASEMEN ================= -->
+  <section id="tab-klasemen" class="panel">
+    <div class="panel__head">
+      <h2>Klasemen</h2>
+      <p>Menang = 3 poin &middot; Seri = 1 poin &middot; Kalah = 0 poin. Diurutkan berdasarkan poin, lalu selisih gol, lalu gol memasukkan.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="standings" id="tabel-klasemen">
+        <thead>
+          <tr>
+            <th class="col-rank">#</th>
+            <th class="col-team">Tim</th>
+            <th>M</th>
+            <th>M</th>
+            <th>S</th>
+            <th>K</th>
+            <th>GM</th>
+            <th>GK</th>
+            <th>SG</th>
+            <th class="col-pts">Poin</th>
+          </tr>
+        </thead>
+        <tbody id="tabel-klasemen-body"></tbody>
+      </table>
+    </div>
+    <p class="table-legend">M (kiri) = Main &middot; M (kanan) = Menang &middot; S = Seri &middot; K = Kalah &middot; GM = Gol Memasukkan &middot; GK = Gol Kemasukan &middot; SG = Selisih Gol</p>
+  </section>
+
+  <!-- ================= TOP SKOR ================= -->
+  <section id="tab-topskor" class="panel">
+    <div class="panel__head">
+      <h2>Daftar Pencetak Gol Terbanyak</h2>
+      <p>Direkap otomatis dari seluruh pertandingan yang sudah dicatat.</p>
+    </div>
+    <div id="daftar-topskor" class="topscorer-list"></div>
+  </section>
+
+  <!-- ================= STARTING XI ================= -->
+  <section id="tab-startingxi" class="panel">
+    <div class="panel__head">
+      <h2>Starting XI</h2>
+      <p>Susun pemain inti tiap tim sesuai format pertandingan yang dipakai.</p>
+    </div>
+
+    <p id="startingxi-warning" class="warning" hidden>Simpan minimal 1 tim terlebih dahulu di tab "Tim" sebelum menyusun starting XI.</p>
+    <p id="startingxi-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk menyusun atau mengubah starting XI.</p>
+
+    <div id="startingxi-admin-area">
+      <form id="form-startingxi" class="lineup-form">
+        <div class="lineup-form__controls">
+          <div class="field">
+            <label for="select-lineup-tim">Pilih Tim</label>
+            <select id="select-lineup-tim" required></select>
+          </div>
+          <div class="field">
+            <label for="select-format">Format Pertandingan</label>
+            <select id="select-format" required>
+              <option value="futsal">Futsal &mdash; 5 pemain (1 kiper + 4)</option>
+              <option value="mini">Mini Soccer &mdash; 8 pemain (1 kiper + 7)</option>
+              <option value="standar">Sepak Bola Standar &mdash; 11 pemain (1 kiper + 10)</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="lineup-slots" class="lineup-slots"></div>
+
+        <button type="submit" class="btn btn--primary">Simpan Starting XI</button>
+      </form>
+    </div>
+
+    <div class="panel__head panel__head--tight">
+      <h3>Starting XI Tersimpan</h3>
+      <p>Klik "Edit" pada kartu tim untuk mengubah nama atau posisi pemain.</p>
+    </div>
+    <div id="daftar-lineup-tersimpan" class="lineup-saved-list"></div>
+
+    <div class="panel__head panel__head--tight">
+      <h3>Preview Formasi Head-to-Head</h3>
+      <p>Pilih dua tim yang sudah punya Starting XI tersimpan untuk melihat perbandingan formasi di lapangan.</p>
+    </div>
+    <p id="pitch-warning" class="warning" hidden>Simpan Starting XI untuk minimal 2 tim terlebih dahulu.</p>
+    <div id="pitch-controls" class="pitch-controls">
+      <select id="select-pitch-a"></select>
+      <span class="pitch-controls__vs">VS</span>
+      <select id="select-pitch-b"></select>
+      <button id="btn-tampilkan-pitch" type="button" class="btn btn--ghost btn--small">Tampilkan Formasi</button>
+    </div>
+    <div id="pitch-preview-wrap"></div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <p>Data disimpan &amp; dibaca dari GitHub &mdash; siapa pun bisa melihat, hanya admin yang bisa mengubah.</p>
+</footer>
+
+<script src="config.js"></script>
+<script src="database.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
