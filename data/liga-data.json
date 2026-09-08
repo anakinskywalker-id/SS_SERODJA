@@ -17,7 +17,23 @@
       "name": "Biru"
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": "match_mts17a75_6x0id",
+      "createdAt": "2026-09-08T02:09:30.210Z",
+      "teamAId": "team_mts0dt0f_j4rym",
+      "teamBId": "team_mts0dt0f_3vxcy",
+      "scoreA": 1,
+      "scoreB": 0,
+      "scorersA": [
+        {
+          "player": "Si A",
+          "goals": 1
+        }
+      ],
+      "scorersB": []
+    }
+  ],
   "lineups": {
     "team_mts0dt0f_j4rym": {
       "format": "mini",
