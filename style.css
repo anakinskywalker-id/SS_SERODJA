@@ -106,6 +106,10 @@ button { font-family: inherit; }
   padding: 20px;
 }
 
+.login-modal[hidden] {
+  display: none;
+}
+
 .login-modal__box {
   background: var(--pl-purple-2);
   border: 1px solid var(--pl-border);
