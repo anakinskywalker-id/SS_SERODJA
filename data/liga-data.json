@@ -1,0 +1,22 @@
+{
+  "teams": [
+    {
+      "id": "team_mts0dt0f_j4rym",
+      "name": "Merah"
+    },
+    {
+      "id": "team_mts0dt0f_3vxcy",
+      "name": "Putih"
+    },
+    {
+      "id": "team_mts0dt0f_pxj0b",
+      "name": "Hitam"
+    },
+    {
+      "id": "team_mts0dt0f_k42mx",
+      "name": "Biru"
+    }
+  ],
+  "matches": [],
+  "lineups": {}
+}
