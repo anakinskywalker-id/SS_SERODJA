@@ -714,16 +714,14 @@ table.standings td.col-pts {
 
 .pitch-heading {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
   margin-bottom: 12px;
   font-size: 13.5px;
   color: var(--pl-ink-soft);
 }
 .pitch-heading__team { display: flex; align-items: center; gap: 8px; }
-.pitch-heading__team--right { flex-direction: row-reverse; }
 .pitch-heading__team strong { color: var(--pl-white); font-family: var(--font-display); font-size: 15px; }
 .pitch-heading__team b { color: var(--pl-cyan); }
 .pitch-heading__dot {
@@ -733,25 +731,30 @@ table.standings td.col-pts {
 }
 .pitch-heading__dot--b { background: var(--pl-pink); }
 
+/* Lapangan selalu vertikal: tim atas menyerang ke bawah, tim bawah
+   menyerang ke atas, dipisah garis tengah horizontal — mengikuti gaya
+   tampilan susunan pemain Livescore/Sofascore. Cukup scroll untuk lihat
+   semua lini. */
 .pitch {
   position: relative;
   display: flex;
-  min-height: 460px;
+  flex-direction: column;
+  min-height: 720px;
   background:
     repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 60px, rgba(255,255,255,0) 60px 120px),
     linear-gradient(180deg, #123324, #0E2A1D);
   border: 2px solid rgba(255,255,255,0.35);
   border-radius: var(--radius);
   overflow: hidden;
-  padding: 18px 12px;
+  padding: 16px 10px;
   gap: 0;
 }
 
 .pitch__center-line {
   position: absolute;
-  top: 0; bottom: 0; left: 50%;
-  width: 0;
-  border-left: 2px dashed rgba(255,255,255,0.4);
+  top: 50%; left: 0; right: 0;
+  height: 0;
+  border-top: 2px dashed rgba(255,255,255,0.4);
 }
 
 .pitch__center-circle {
@@ -763,22 +766,23 @@ table.standings td.col-pts {
   transform: translate(-50%, -50%);
 }
 
-/* Kotak "penalti" dekoratif di kedua ujung, kesan garis lapangan asli */
+/* Kotak "penalti" dekoratif di ujung atas & bawah, kesan garis lapangan asli */
 .pitch::before,
 .pitch::after {
   content: '';
   position: absolute;
-  top: 22%;
-  bottom: 22%;
-  width: 14%;
+  left: 22%;
+  right: 22%;
+  height: 13%;
   border: 2px solid rgba(255,255,255,0.3);
 }
-.pitch::before { left: 0; border-left: none; }
-.pitch::after { right: 0; border-right: none; }
+.pitch::before { top: 0; border-top: none; }
+.pitch::after { bottom: 0; border-bottom: none; }
 
 .pitch__side {
   flex: 1;
   display: flex;
+  flex-direction: column;
   position: relative;
   z-index: 1;
 }
@@ -786,11 +790,13 @@ table.standings td.col-pts {
 .pitch__col {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: space-evenly;
   align-items: center;
-  gap: 10px;
-  padding: 4px;
+  gap: 8px;
+  padding: 6px 2px;
 }
 
 .pitch__player {
@@ -799,8 +805,8 @@ table.standings td.col-pts {
   border-radius: 8px;
   padding: 6px 9px;
   text-align: center;
-  min-width: 82px;
-  max-width: 110px;
+  flex: 0 1 88px;
+  max-width: 120px;
 }
 
 .pitch__player-name {
@@ -840,67 +846,10 @@ table.standings td.col-pts {
   .lineup-slot__position { grid-column: 1 / -1; }
   .panel { padding: 20px 16px 26px; }
   .hero h1 { font-size: 27px; }
-}
 
-/* Lapangan mode potret (HP) — tim ditumpuk atas/bawah, bukan kiri/kanan,
-   mengikuti gaya tampilan susunan pemain di Livescore/Sofascore. */
-@media (max-width: 700px) {
-  .pitch-heading {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .pitch-heading__team--right {
-    flex-direction: row;
-  }
-
-  .pitch {
-    flex-direction: column;
-    min-height: 640px;
-    padding: 14px 8px;
-  }
-
-  .pitch__center-line {
-    top: 50%; bottom: auto; left: 0; right: 0;
-    width: auto; height: 0;
-    border-left: none;
-    border-top: 2px dashed rgba(255,255,255,0.4);
-  }
-
-  .pitch__center-circle {
-    width: 90px; height: 90px;
-  }
-
-  .pitch::before,
-  .pitch::after {
-    left: 22%;
-    right: 22%;
-    top: auto;
-    bottom: auto;
-    width: auto;
-    height: 12%;
-  }
-  .pitch::before { top: 0; border-left: 2px solid rgba(255,255,255,0.3); border-right: 2px solid rgba(255,255,255,0.3); border-bottom: none; }
-  .pitch::after { bottom: 0; border-left: 2px solid rgba(255,255,255,0.3); border-right: 2px solid rgba(255,255,255,0.3); border-top: none; }
-
-  .pitch__side {
-    flex-direction: column;
-  }
-
-  .pitch__col {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding: 6px 2px;
-  }
-
-  .pitch__player {
-    min-width: 0;
-    max-width: none;
-    flex: 1 1 72px;
-    padding: 5px 4px;
-  }
-
+  .pitch { min-height: 640px; padding: 14px 8px; }
+  .pitch__center-circle { width: 90px; height: 90px; }
+  .pitch__player { flex-basis: 72px; padding: 5px 4px; }
   .pitch__player-name { font-size: 10px; }
   .pitch__player-pos { font-size: 8.5px; }
 }
