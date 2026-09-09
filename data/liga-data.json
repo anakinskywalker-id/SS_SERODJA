@@ -10,5 +10,51 @@
     }
   ],
   "matches": [],
-  "lineups": {}
+  "lineups": {
+    "team_mttdu3qx_80xwd": {
+      "format": "mini",
+      "players": [
+        {
+          "id": "p0",
+          "name": "Si A",
+          "positionCode": "GK"
+        },
+        {
+          "id": "p1",
+          "name": "Si B",
+          "positionCode": "CB"
+        },
+        {
+          "id": "p2",
+          "name": "Si C",
+          "positionCode": "CB"
+        },
+        {
+          "id": "p3",
+          "name": "Si D",
+          "positionCode": "CM"
+        },
+        {
+          "id": "p4",
+          "name": "Si E",
+          "positionCode": "RM"
+        },
+        {
+          "id": "p5",
+          "name": "Si F",
+          "positionCode": "LM"
+        },
+        {
+          "id": "p6",
+          "name": "Si G",
+          "positionCode": "CF"
+        },
+        {
+          "id": "p7",
+          "name": "Si H",
+          "positionCode": "CF"
+        }
+      ]
+    }
+  }
 }
