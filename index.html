@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SS SERODJA &mdash; Pencatat Kompetisi Sepakbola</title>
+<title id="page-title">SS SERODJA; Pencatat Kompetisi Sepakbola</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -14,7 +14,7 @@
   <div class="topbar__inner">
     <div class="brand">
       <span class="brand__mark" aria-hidden="true"></span>
-      <span class="brand__name">SS SERODJA</span>
+      <span class="brand__name" id="brand-name-text">SS SERODJA</span>
     </div>
     <div class="topbar__auth">
       <span id="auth-status" class="topbar__tagline">Memuat data&hellip;</span>
@@ -47,7 +47,7 @@
 </div>
 
 <header class="hero">
-  <h1>Liga SS SERODJA</h1>
+  <h1 id="hero-title">Liga SS SERODJA</h1>
   <p>Catat pertandingan, klasemen &amp; starting XI kompetisimu</p>
 </header>
 
@@ -162,6 +162,7 @@
       <h2>Klasemen</h2>
       <p>Menang = 3 poin &middot; Seri = 1 poin &middot; Kalah = 0 poin. Diurutkan berdasarkan poin, lalu selisih gol, lalu gol memasukkan.</p>
     </div>
+    <button type="button" id="btn-share-klasemen" class="btn btn--ghost btn--small btn--share">&#128247; Bagikan / Unduh JPEG</button>
     <div class="table-wrap">
       <table class="standings" id="tabel-klasemen">
         <thead>
@@ -190,6 +191,7 @@
       <h2>Daftar Pencetak Gol Terbanyak</h2>
       <p>Direkap otomatis dari seluruh pertandingan yang sudah dicatat.</p>
     </div>
+    <button type="button" id="btn-share-topskor" class="btn btn--ghost btn--small btn--share">&#128247; Bagikan / Unduh JPEG</button>
     <div id="daftar-topskor" class="topscorer-list"></div>
   </section>
 
@@ -253,6 +255,7 @@
 
 <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="config.js"></script>
 <script src="database.js"></script>
 <script src="script.js"></script>
