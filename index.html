@@ -47,7 +47,7 @@
 </div>
 
 <header class="hero">
-  <h1>Klasemen Liga</h1>
+  <h1>Liga Kandang</h1>
   <p>Catat pertandingan, klasemen &amp; starting XI kompetisimu</p>
 </header>
 
@@ -71,16 +71,29 @@
     <p id="tim-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk menambah atau mengubah tim.</p>
 
     <div id="tim-admin-area">
-      <form id="form-jumlah-tim" class="row-inline">
-        <label for="input-jumlah-tim">Jumlah tim</label>
-        <input type="number" id="input-jumlah-tim" min="2" max="32" placeholder="cth. 4" required>
-        <button type="submit" class="btn btn--ghost">Buat Slot Nama</button>
-      </form>
+      <div id="tim-awal-area">
+        <form id="form-jumlah-tim" class="row-inline">
+          <label for="input-jumlah-tim">Jumlah tim</label>
+          <input type="number" id="input-jumlah-tim" min="2" max="32" placeholder="cth. 4" required>
+          <button type="submit" class="btn btn--ghost">Buat Slot Nama</button>
+        </form>
 
-      <div id="slot-nama-tim" class="team-slots" aria-live="polite"></div>
+        <div id="slot-nama-tim" class="team-slots" aria-live="polite"></div>
+
+        <div class="panel__actions">
+          <button id="btn-simpan-tim" class="btn btn--primary" type="button" disabled>Simpan Tim &amp; Mulai Kompetisi</button>
+        </div>
+      </div>
+
+      <div id="tambah-tim-area" hidden>
+        <form id="form-tambah-tim" class="row-inline">
+          <label for="input-nama-tim-baru">Tambah tim baru</label>
+          <input type="text" id="input-nama-tim-baru" placeholder="Nama tim" required>
+          <button type="submit" class="btn btn--ghost">+ Tambah Tim</button>
+        </form>
+      </div>
 
       <div class="panel__actions">
-        <button id="btn-simpan-tim" class="btn btn--primary" type="button" disabled>Simpan Tim &amp; Mulai Kompetisi</button>
         <button id="btn-reset-semua" class="btn btn--danger" type="button">Reset Semua Data</button>
       </div>
     </div>
@@ -116,12 +129,12 @@
 
         <div class="scorers">
           <div class="scorers__col">
-            <h3>Pencetak Gol &mdash; <span id="label-tim-a">Tim Tuan Rumah</span></h3>
+            <h3>Pencetak Gol &mdash; <span id="label-tim-a">Tim Tuan Rumah</span> <span id="counter-gol-a" class="scorer-counter"></span></h3>
             <div id="scorer-list-a" class="scorer-list"></div>
             <button type="button" class="btn btn--ghost btn--small" data-add-scorer="a">+ Tambah Pencetak Gol</button>
           </div>
           <div class="scorers__col">
-            <h3>Pencetak Gol &mdash; <span id="label-tim-b">Tim Tamu</span></h3>
+            <h3>Pencetak Gol &mdash; <span id="label-tim-b">Tim Tamu</span> <span id="counter-gol-b" class="scorer-counter"></span></h3>
             <div id="scorer-list-b" class="scorer-list"></div>
             <button type="button" class="btn btn--ghost btn--small" data-add-scorer="b">+ Tambah Pencetak Gol</button>
           </div>
@@ -129,7 +142,10 @@
 
         <p id="scorer-warning" class="warning" hidden>Jumlah pencetak gol yang dimasukkan tidak sama dengan skor tim tersebut.</p>
 
-        <button type="submit" class="btn btn--primary">Simpan Hasil Pertandingan</button>
+        <div class="panel__actions">
+          <button type="submit" id="btn-submit-pertandingan" class="btn btn--primary">Simpan Hasil Pertandingan</button>
+          <button type="button" id="btn-batal-edit-pertandingan" class="btn btn--ghost" hidden>Batal Edit</button>
+        </div>
       </form>
     </div>
 
@@ -234,6 +250,8 @@
 <footer class="app-footer">
   <p>Data disimpan &amp; dibaca dari Server &mdash; siapa pun bisa melihat, hanya admin yang bisa mengubah.</p>
 </footer>
+
+<div id="toast-container" class="toast-container" aria-live="polite"></div>
 
 <script src="config.js"></script>
 <script src="database.js"></script>
