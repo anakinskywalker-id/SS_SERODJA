@@ -354,6 +354,85 @@ label {
   font-weight: 600;
 }
 
+.chip--editable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px 4px 14px;
+}
+
+.chip__label { white-space: nowrap; }
+
+.chip__btn {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: var(--pl-ink-soft);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.chip__btn:hover { background: rgba(255,255,255,0.18); color: var(--pl-white); }
+.chip__btn--danger:hover { background: rgba(233,0,82,0.25); color: var(--pl-pink); }
+
+.chip__edit-input {
+  background: #170022;
+  border: 1px solid var(--pl-cyan);
+  border-radius: var(--radius-pill);
+  color: var(--pl-white);
+  padding: 4px 10px;
+  font-size: 13px;
+  width: 140px;
+}
+
+.scorer-counter {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--pl-ink-dim);
+}
+.scorer-counter--ok { color: var(--pl-green); }
+.scorer-counter--off { color: var(--pl-pink); }
+
+/* ---------------- Toast notifications ---------------- */
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  width: min(90vw, 380px);
+  align-items: center;
+}
+
+.toast {
+  background: var(--pl-purple-2);
+  border: 1px solid var(--pl-border);
+  border-left: 4px solid var(--pl-green);
+  color: var(--pl-white);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+.toast.is-visible { opacity: 1; transform: translateY(0); }
+.toast--error { border-left-color: var(--pl-pink); }
+
 /* ---------------- Match form ---------------- */
 
 .warning {
@@ -460,15 +539,22 @@ label {
   flex-basis: 100%;
 }
 
-.match-card__remove {
+.match-card__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.match-card__remove,
+.match-card__edit {
   background: transparent;
   border: none;
-  color: var(--pl-pink);
   cursor: pointer;
   font-size: 12.5px;
   font-weight: 700;
   text-decoration: underline;
 }
+.match-card__remove { color: var(--pl-pink); }
+.match-card__edit { color: var(--pl-cyan); }
 
 .empty-note {
   color: var(--pl-ink-dim);
