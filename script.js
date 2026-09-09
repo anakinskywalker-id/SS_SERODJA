@@ -1,7 +1,7 @@
 /**
  * script.js
  * -----------------------------------------------------------------------
- * Logika UI aplikasi Liga Kandang.
+ * Logika UI aplikasi liga sepakbola berbasis GitHub.
  * Data dibaca & disimpan lewat objek DB (lihat database.js) yang
  * tersambung ke GitHub + Worker. Membaca = publik, menulis = wajib login
  * admin. Semua operasi tulis bersifat async (menunggu respons Worker).
@@ -290,6 +290,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     previewBox.innerHTML = buildLineupCardHtml(team, lu);
+    wireLineupCardShareButtons(previewBox);
   }
 
 
@@ -557,11 +558,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="match-card__score">
             ${escapeHtml(teamName(m.teamAId))} <b>${m.scoreA} &ndash; ${m.scoreB}</b> ${escapeHtml(teamName(m.teamBId))}
           </div>
-          ${loggedIn ? `
           <div class="match-card__actions">
+            <button class="match-card__share" data-id="${m.id}" title="Bagikan sebagai gambar">&#128247;</button>
+            ${loggedIn ? `
             <button class="match-card__edit" data-id="${m.id}">Edit</button>
-            <button class="match-card__remove" data-id="${m.id}">Hapus</button>
-          </div>` : ''}
+            <button class="match-card__remove" data-id="${m.id}">Hapus</button>` : ''}
+          </div>
           <div class="match-card__scorers">
             Gol ${escapeHtml(teamName(m.teamAId))}: ${scorerText(m.scorersA)} &nbsp;|&nbsp;
             Gol ${escapeHtml(teamName(m.teamBId))}: ${scorerText(m.scorersB)}
@@ -569,6 +571,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>`;
       })
       .join('');
+
+    box.querySelectorAll('.match-card__share').forEach((btn) => {
+      btn.addEventListener('click', () => shareMatch(btn.dataset.id));
+    });
 
     box.querySelectorAll('.match-card__edit').forEach((btn) => {
       btn.addEventListener('click', () => startEditMatch(btn.dataset.id));
@@ -890,18 +896,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  function buildLineupCardHtml(team, lu, showActions = false) {
+  function buildLineupCardHtml(team, lu, showActions = false, withShareButton = true) {
     const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
     return `
       <div class="lineup-card">
         <div class="lineup-card__head">
           <h4>${escapeHtml(team.name)}</h4>
           <span class="lineup-card__format">${formatLabel} &middot; ${formationString(lu.format, lu.players)}</span>
-          ${showActions ? `
           <div class="lineup-card__actions">
+            ${withShareButton ? `<button type="button" class="btn btn--ghost btn--small" data-share-lineup="${team.id}" title="Bagikan sebagai gambar">&#128247;</button>` : ''}
+            ${showActions ? `
             <button type="button" class="btn btn--ghost btn--small" data-edit-lineup="${team.id}">Edit</button>
-            <button type="button" class="btn btn--danger btn--small" data-delete-lineup="${team.id}">Hapus</button>
-          </div>` : ''}
+            <button type="button" class="btn btn--danger btn--small" data-delete-lineup="${team.id}">Hapus</button>` : ''}
+          </div>
         </div>
         <div class="lineup-card__players">
           ${lu.players
@@ -909,6 +916,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             .join('')}
         </div>
       </div>`;
+  }
+
+  function wireLineupCardShareButtons(container) {
+    container.querySelectorAll('[data-share-lineup]').forEach((btn) => {
+      btn.addEventListener('click', () => shareLineup(btn.dataset.shareLineup));
+    });
   }
 
   function renderDaftarLineupTersimpan() {
@@ -925,6 +938,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     daftarLineupTersimpan.innerHTML = teamsWithLineup
       .map((t) => buildLineupCardHtml(t, lineups[t.id], loggedIn))
       .join('');
+
+    wireLineupCardShareButtons(daftarLineupTersimpan);
 
     daftarLineupTersimpan.querySelectorAll('[data-edit-lineup]').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -1071,6 +1086,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     return div.innerHTML;
   }
 
+  function slugifyAppName() {
+    const name = (APP_CONFIG.APP_NAME || 'liga-kandang').toLowerCase();
+    return name.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'liga-kandang';
+  }
+
+  function applyAppBranding() {
+    const name = APP_CONFIG.APP_NAME || 'Liga Kandang';
+    document.getElementById('page-title').textContent = `${name} — Pencatat Kompetisi Sepakbola`;
+    document.getElementById('brand-name-text').textContent = name;
+    document.getElementById('hero-title').textContent = name.toLowerCase().startsWith('liga') ? name : `Liga ${name}`;
+  }
+
   const toastContainer = document.getElementById('toast-container');
   function showToast(message, type = 'success') {
     const el = document.createElement('div');
@@ -1084,7 +1111,186 @@ document.addEventListener('DOMContentLoaded', async () => {
     }, 3200);
   }
 
+  // ---------------- Fitur Share / Unduh JPEG ----------------
+  // Membuat kartu HTML tersembunyi (di luar layar) berisi konten yang mau
+  // dibagikan, "memotretnya" jadi gambar pakai html2canvas, lalu:
+  // - Kalau perangkat mendukung Web Share API dengan file (kebanyakan HP),
+  //   langsung buka menu share bawaan (bisa langsung ke WhatsApp dsb.)
+  // - Kalau tidak, otomatis unduh sebagai file .jpg
+
+  function exportHeaderHtml(subtitle) {
+    return `
+      <div class="export-card__header">
+        <span class="export-card__dot"></span>
+        <span class="export-card__brand">${escapeHtml(APP_CONFIG.APP_NAME || 'Liga Kandang')}</span>
+      </div>
+      <div class="export-card__subtitle">${escapeHtml(subtitle)}</div>
+    `;
+  }
+
+  const EXPORT_FOOTER_HTML = `<div class="export-card__footer">Dibuat dengan ${escapeHtml(APP_CONFIG.APP_NAME || 'Liga Kandang')}</div>`;
+
+  async function exportHtmlToJpeg(innerHtml, filename, shareTitle) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'export-card';
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+    wrapper.style.width = '640px';
+    wrapper.innerHTML = innerHtml;
+    document.body.appendChild(wrapper);
+
+    try {
+      const canvas = await html2canvas(wrapper, {
+        backgroundColor: '#0D0018',
+        scale: 2,
+        useCORS: true
+      });
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+      let shared = false;
+      if (navigator.canShare) {
+        try {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], filename, { type: 'image/jpeg' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: shareTitle });
+            shared = true;
+          }
+        } catch (shareErr) {
+          // Kalau user membatalkan share (AbortError), jangan lanjut fallback unduh.
+          if (shareErr && shareErr.name === 'AbortError') { shared = true; }
+        }
+      }
+
+      if (!shared) {
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showToast('Gambar berhasil diunduh.');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal membuat gambar untuk dibagikan.', 'error');
+    } finally {
+      wrapper.remove();
+    }
+  }
+
+  async function shareStandings() {
+    const standings = hitungKlasemen();
+    if (standings.length === 0) {
+      showToast('Belum ada data klasemen untuk dibagikan.', 'error');
+      return;
+    }
+    const rows = standings
+      .map((r, i) => {
+        const gd = r.goalsFor - r.goalsAgainst;
+        return `
+        <tr>
+          <td class="col-rank">${i + 1}</td>
+          <td class="col-team">${escapeHtml(r.name)}</td>
+          <td>${r.played}</td>
+          <td>${r.win}</td>
+          <td>${r.draw}</td>
+          <td>${r.lose}</td>
+          <td>${r.goalsFor}</td>
+          <td>${r.goalsAgainst}</td>
+          <td>${gd > 0 ? '+' : ''}${gd}</td>
+          <td class="col-pts">${r.points}</td>
+        </tr>`;
+      })
+      .join('');
+
+    const html = `
+      ${exportHeaderHtml('Klasemen')}
+      <table class="standings" style="width:100%">
+        <thead><tr>
+          <th class="col-rank">#</th><th class="col-team">Tim</th><th>M</th><th>M</th><th>S</th><th>K</th><th>GM</th><th>GK</th><th>SG</th><th class="col-pts">Poin</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `klasemen-${slugifyAppName()}.jpg`, `Klasemen ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  async function shareTopSkor() {
+    const scorers = hitungTopSkor();
+    if (scorers.length === 0) {
+      showToast('Belum ada data top skor untuk dibagikan.', 'error');
+      return;
+    }
+    const rows = scorers
+      .map(
+        (s, i) => `
+        <div class="topscorer-row">
+          <div class="topscorer-row__rank">${i + 1}</div>
+          <div>
+            <div class="topscorer-row__player">${escapeHtml(s.player)}</div>
+            <div class="topscorer-row__team">${escapeHtml(s.team)}</div>
+          </div>
+          <div></div>
+          <div class="topscorer-row__goals">${s.goals} gol</div>
+        </div>`
+      )
+      .join('');
+
+    const html = `
+      ${exportHeaderHtml('Top Skor')}
+      <div class="topscorer-list">${rows}</div>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `top-skor-${slugifyAppName()}.jpg`, `Top Skor ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  async function shareMatch(matchId) {
+    const match = DB.getMatches().find((m) => m.id === matchId);
+    if (!match) return;
+    const teams = DB.getTeams();
+    const teamName = (id) => teams.find((t) => t.id === id)?.name || '(tim dihapus)';
+    const scorerText = (list) => list.map((s) => `${escapeHtml(s.player)} (${s.goals})`).join(', ') || '&mdash;';
+
+    const html = `
+      ${exportHeaderHtml('Hasil Pertandingan')}
+      <div class="export-match__score">
+        <span>${escapeHtml(teamName(match.teamAId))}</span>
+        <b>${match.scoreA} &ndash; ${match.scoreB}</b>
+        <span>${escapeHtml(teamName(match.teamBId))}</span>
+      </div>
+      <div class="export-match__scorers">
+        <div><em>${escapeHtml(teamName(match.teamAId))}</em><br>${scorerText(match.scorersA)}</div>
+        <div><em>${escapeHtml(teamName(match.teamBId))}</em><br>${scorerText(match.scorersB)}</div>
+      </div>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `hasil-pertandingan-${slugifyAppName()}.jpg`, `Hasil Pertandingan ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  async function shareLineup(teamId) {
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    const lu = DB.getAllLineups()[teamId];
+    if (!team || !lu) {
+      showToast('Tim ini belum punya Line Up tersimpan.', 'error');
+      return;
+    }
+    const html = `
+      ${exportHeaderHtml('Line Up')}
+      ${buildLineupCardHtml(team, lu, false, false)}
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `lineup-${team.name}.jpg`, `Line Up ${team.name}`);
+  }
+
+  document.getElementById('btn-share-klasemen').addEventListener('click', shareStandings);
+  document.getElementById('btn-share-topskor').addEventListener('click', shareTopSkor);
+
   // ---------------- Init awal ----------------
+  applyAppBranding();
   authStatus.textContent = 'Memuat data dari GitHub...';
   await DB.init();
   applyAuthUI();
