@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function refreshCurrentTabAdminAreas() {
     renderDaftarTimTersimpan();
+    renderTimAwalVsKelola();
     renderFormPertandingan();
     renderFormStartingXI();
     renderKlasemen();
@@ -105,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function handleWriteError(err) {
     console.error(err);
-    alert(err.message || 'Terjadi kesalahan saat menyimpan data.');
+    showToast(err.message || 'Terjadi kesalahan saat menyimpan data.', 'error');
     if (err.code === 'AUTH_EXPIRED') {
       applyAuthUI();
       refreshCurrentTabAdminAreas();
@@ -118,6 +119,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const btnSimpanTim = document.getElementById('btn-simpan-tim');
   const btnResetSemua = document.getElementById('btn-reset-semua');
   const daftarTimTersimpan = document.getElementById('daftar-tim-tersimpan');
+  const timAwalArea = document.getElementById('tim-awal-area');
+  const tambahTimArea = document.getElementById('tambah-tim-area');
+  const formTambahTim = document.getElementById('form-tambah-tim');
+  const inputNamaTimBaru = document.getElementById('input-nama-tim-baru');
+
+  // Kalau belum ada tim sama sekali: tampilkan form "buat slot awal" (cara
+  // cepat isi banyak tim sekaligus). Kalau sudah ada minimal 1 tim:
+  // sembunyikan form itu, tampilkan form "+ Tambah Tim" satuan supaya
+  // tim baru bisa ditambah tanpa menghapus pertandingan/starting XI yang
+  // sudah ada.
+  function renderTimAwalVsKelola() {
+    const adaTim = DB.getTeams().length > 0;
+    timAwalArea.hidden = adaTim;
+    tambahTimArea.hidden = !adaTim;
+  }
 
   formJumlahTim.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -142,12 +158,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const names = Array.from(inputs).map((inp) => inp.value.trim());
 
     if (names.length === 0 || names.some((n) => !n)) {
-      alert('Mohon isi semua nama tim.');
+      showToast('Mohon isi semua nama tim.', 'error');
       return;
     }
     const hasDuplicate = new Set(names.map((n) => n.toLowerCase())).size !== names.length;
     if (hasDuplicate) {
-      alert('Nama tim tidak boleh sama antara satu dengan yang lain.');
+      showToast('Nama tim tidak boleh sama antara satu dengan yang lain.', 'error');
       return;
     }
 
@@ -158,13 +174,41 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderDaftarTimTersimpan();
       renderFormPertandingan();
       renderFormStartingXI();
-      alert('Tim berhasil disimpan. Kompetisi siap dimulai!');
+      renderTimAwalVsKelola();
+      showToast('Tim berhasil disimpan. Kompetisi siap dimulai!');
       switchTab('pertandingan');
     } catch (err) {
       handleWriteError(err);
     } finally {
       btnSimpanTim.disabled = false;
       btnSimpanTim.textContent = 'Simpan Tim & Mulai Kompetisi';
+    }
+  });
+
+  formTambahTim.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = inputNamaTimBaru.value.trim();
+    if (!name) return;
+
+    const existing = DB.getTeams();
+    if (existing.some((t) => t.name.toLowerCase() === name.toLowerCase())) {
+      showToast('Nama tim itu sudah ada.', 'error');
+      return;
+    }
+
+    const submitBtn = formTambahTim.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await DB.addTeam(name);
+      inputNamaTimBaru.value = '';
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderFormStartingXI();
+      showToast(`Tim "${name}" berhasil ditambahkan.`);
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 
@@ -179,6 +223,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       renderFormPertandingan();
       renderRiwayatPertandingan();
       renderFormStartingXI();
+      renderTimAwalVsKelola();
+      showToast('Semua data berhasil dihapus.');
     } catch (err) {
       handleWriteError(err);
     }
@@ -186,6 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function renderDaftarTimTersimpan() {
     const teams = DB.getTeams();
+    const loggedIn = DB.isLoggedIn();
     if (teams.length === 0) {
       daftarTimTersimpan.innerHTML = '';
       return;
@@ -193,9 +240,80 @@ document.addEventListener('DOMContentLoaded', async () => {
     daftarTimTersimpan.innerHTML = `
       <h3>Tim Terdaftar (${teams.length})</h3>
       <div class="saved-teams__list">
-        ${teams.map((t) => `<span class="chip">${escapeHtml(t.name)}</span>`).join('')}
+        ${teams
+          .map(
+            (t) => `
+          <span class="chip chip--editable" data-team-id="${t.id}">
+            <span class="chip__label">${escapeHtml(t.name)}</span>
+            ${loggedIn ? `
+            <button type="button" class="chip__btn" data-edit-team="${t.id}" title="Ubah nama">&#9998;</button>
+            <button type="button" class="chip__btn chip__btn--danger" data-delete-team="${t.id}" title="Hapus tim">&times;</button>` : ''}
+          </span>`
+          )
+          .join('')}
       </div>
     `;
+
+    daftarTimTersimpan.querySelectorAll('[data-edit-team]').forEach((btn) => {
+      btn.addEventListener('click', () => startEditTeam(btn.dataset.editTeam));
+    });
+    daftarTimTersimpan.querySelectorAll('[data-delete-team]').forEach((btn) => {
+      btn.addEventListener('click', () => handleDeleteTeam(btn.dataset.deleteTeam));
+    });
+  }
+
+  function startEditTeam(teamId) {
+    const chip = daftarTimTersimpan.querySelector(`.chip[data-team-id="${teamId}"]`);
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    if (!chip || !team) return;
+
+    chip.innerHTML = `
+      <input type="text" class="chip__edit-input" value="${escapeHtml(team.name)}">
+      <button type="button" class="chip__btn" data-save-team="${teamId}" title="Simpan">&#10003;</button>
+      <button type="button" class="chip__btn" data-cancel-edit-team title="Batal">&times;</button>
+    `;
+    const input = chip.querySelector('.chip__edit-input');
+    input.focus();
+    input.select();
+
+    const save = async () => {
+      const newName = input.value.trim();
+      if (!newName) return;
+      try {
+        await DB.updateTeamName(teamId, newName);
+        renderDaftarTimTersimpan();
+        renderFormPertandingan();
+        renderFormStartingXI();
+        renderRiwayatPertandingan();
+        showToast('Nama tim berhasil diperbarui.');
+      } catch (err) {
+        handleWriteError(err);
+      }
+    };
+
+    chip.querySelector('[data-save-team]').addEventListener('click', save);
+    chip.querySelector('[data-cancel-edit-team]').addEventListener('click', () => renderDaftarTimTersimpan());
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); save(); }
+      if (e.key === 'Escape') renderDaftarTimTersimpan();
+    });
+  }
+
+  async function handleDeleteTeam(teamId) {
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    if (!team) return;
+    if (!confirm(`Hapus tim "${team.name}"? Pertandingan yang melibatkan tim ini akan tetap tersimpan (ditandai "tim dihapus"), tapi starting XI tim ini akan ikut terhapus.`)) return;
+    try {
+      await DB.deleteTeam(teamId);
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderFormStartingXI();
+      renderRiwayatPertandingan();
+      renderTimAwalVsKelola();
+      showToast(`Tim "${team.name}" berhasil dihapus.`);
+    } catch (err) {
+      handleWriteError(err);
+    }
   }
 
   // ---------------- TAB 2: Input Pertandingan ----------------
@@ -208,8 +326,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const labelTimB = document.getElementById('label-tim-b');
   const scorerListA = document.getElementById('scorer-list-a');
   const scorerListB = document.getElementById('scorer-list-b');
+  const counterGolA = document.getElementById('counter-gol-a');
+  const counterGolB = document.getElementById('counter-gol-b');
   const pertandinganWarning = document.getElementById('pertandingan-warning');
   const scorerWarning = document.getElementById('scorer-warning');
+  const btnSubmitPertandingan = document.getElementById('btn-submit-pertandingan');
+  const btnBatalEditPertandingan = document.getElementById('btn-batal-edit-pertandingan');
+
+  let editingMatchId = null; // null = mode "tambah baru", isi = sedang mengedit match ini
 
   document.querySelectorAll('[data-add-scorer]').forEach((btn) => {
     btn.addEventListener('click', () => addScorerRow(btn.dataset.addScorer));
@@ -245,6 +369,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   selectTimA.addEventListener('change', updateScorerLabels);
   selectTimB.addEventListener('change', updateScorerLabels);
 
+  // Counter real-time: tampilkan "X dari Y gol terisi" saat mengetik,
+  // supaya tidak perlu klik submit dulu baru tahu jumlahnya belum cocok.
+  function updateGoalCounters() {
+    const totalA = readScorerRows(scorerListA).reduce((sum, s) => sum + s.goals, 0);
+    const totalB = readScorerRows(scorerListB).reduce((sum, s) => sum + s.goals, 0);
+    const targetA = parseInt(skorA.value, 10);
+    const targetB = parseInt(skorB.value, 10);
+
+    function setCounter(el, total, target) {
+      if (isNaN(target)) {
+        el.textContent = `(${total} gol dicatat)`;
+        el.classList.remove('scorer-counter--ok', 'scorer-counter--off');
+        return;
+      }
+      el.textContent = `(${total} dari ${target} gol)`;
+      el.classList.toggle('scorer-counter--ok', total === target);
+      el.classList.toggle('scorer-counter--off', total !== target);
+    }
+    setCounter(counterGolA, totalA, targetA);
+    setCounter(counterGolB, totalB, targetB);
+  }
+
+  skorA.addEventListener('input', updateGoalCounters);
+  skorB.addEventListener('input', updateGoalCounters);
+  scorerListA.addEventListener('input', updateGoalCounters);
+  scorerListB.addEventListener('input', updateGoalCounters);
+
   function addScorerRow(side, playerVal = '', goalsVal = 1) {
     const container = side === 'a' ? scorerListA : scorerListB;
     const row = document.createElement('div');
@@ -254,8 +405,46 @@ document.addEventListener('DOMContentLoaded', async () => {
       <input type="number" min="1" value="${goalsVal}" class="scorer-goals">
       <button type="button" class="scorer-row__remove" title="Hapus">&times;</button>
     `;
-    row.querySelector('.scorer-row__remove').addEventListener('click', () => row.remove());
+    row.querySelector('.scorer-row__remove').addEventListener('click', () => {
+      row.remove();
+      updateGoalCounters();
+    });
     container.appendChild(row);
+    updateGoalCounters();
+  }
+
+  function resetFormPertandinganKeModeTambah() {
+    editingMatchId = null;
+    formPertandingan.reset();
+    scorerListA.innerHTML = '';
+    scorerListB.innerHTML = '';
+    btnSubmitPertandingan.textContent = 'Simpan Hasil Pertandingan';
+    btnBatalEditPertandingan.hidden = true;
+    updateScorerLabels();
+    updateGoalCounters();
+  }
+
+  btnBatalEditPertandingan.addEventListener('click', resetFormPertandinganKeModeTambah);
+
+  function startEditMatch(matchId) {
+    const match = DB.getMatches().find((m) => m.id === matchId);
+    if (!match) return;
+
+    editingMatchId = matchId;
+    selectTimA.value = match.teamAId;
+    selectTimB.value = match.teamBId;
+    skorA.value = match.scoreA;
+    skorB.value = match.scoreB;
+    scorerListA.innerHTML = '';
+    scorerListB.innerHTML = '';
+    match.scorersA.forEach((s) => addScorerRow('a', s.player, s.goals));
+    match.scorersB.forEach((s) => addScorerRow('b', s.player, s.goals));
+
+    updateScorerLabels();
+    updateGoalCounters();
+    btnSubmitPertandingan.textContent = 'Perbarui Pertandingan';
+    btnBatalEditPertandingan.hidden = false;
+    formPertandingan.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   formPertandingan.addEventListener('submit', async (e) => {
@@ -264,7 +453,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const teamAId = selectTimA.value;
     const teamBId = selectTimB.value;
     if (teamAId === teamBId) {
-      alert('Tim tuan rumah dan tim tamu tidak boleh sama.');
+      showToast('Tim tuan rumah dan tim tamu tidak boleh sama.', 'error');
       return;
     }
 
@@ -283,21 +472,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     scorerWarning.hidden = true;
 
-    const submitBtn = formPertandingan.querySelector('button[type="submit"]');
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Menyimpan ke GitHub...';
+    btnSubmitPertandingan.disabled = true;
+    const originalLabel = btnSubmitPertandingan.textContent;
+    btnSubmitPertandingan.textContent = 'Menyimpan ke GitHub...';
     try {
-      await DB.addMatch({ teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
-      formPertandingan.reset();
-      scorerListA.innerHTML = '';
-      scorerListB.innerHTML = '';
+      if (editingMatchId) {
+        await DB.updateMatch(editingMatchId, { teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        showToast('Pertandingan berhasil diperbarui.');
+      } else {
+        await DB.addMatch({ teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        showToast('Pertandingan berhasil disimpan.');
+      }
+      resetFormPertandinganKeModeTambah();
       renderRiwayatPertandingan();
-      updateScorerLabels();
     } catch (err) {
       handleWriteError(err);
     } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Simpan Hasil Pertandingan';
+      btnSubmitPertandingan.disabled = false;
+      btnSubmitPertandingan.textContent = editingMatchId ? 'Perbarui Pertandingan' : originalLabel;
     }
   });
 
@@ -334,7 +526,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           <div class="match-card__score">
             ${escapeHtml(teamName(m.teamAId))} <b>${m.scoreA} &ndash; ${m.scoreB}</b> ${escapeHtml(teamName(m.teamBId))}
           </div>
-          ${loggedIn ? `<button class="match-card__remove" data-id="${m.id}">Hapus</button>` : ''}
+          ${loggedIn ? `
+          <div class="match-card__actions">
+            <button class="match-card__edit" data-id="${m.id}">Edit</button>
+            <button class="match-card__remove" data-id="${m.id}">Hapus</button>
+          </div>` : ''}
           <div class="match-card__scorers">
             Gol ${escapeHtml(teamName(m.teamAId))}: ${scorerText(m.scorersA)} &nbsp;|&nbsp;
             Gol ${escapeHtml(teamName(m.teamBId))}: ${scorerText(m.scorersB)}
@@ -343,12 +539,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       })
       .join('');
 
+    box.querySelectorAll('.match-card__edit').forEach((btn) => {
+      btn.addEventListener('click', () => startEditMatch(btn.dataset.id));
+    });
+
     box.querySelectorAll('.match-card__remove').forEach((btn) => {
       btn.addEventListener('click', async () => {
         if (!confirm('Hapus pertandingan ini dari riwayat?')) return;
         try {
           await DB.deleteMatch(btn.dataset.id);
+          if (editingMatchId === btn.dataset.id) resetFormPertandinganKeModeTambah();
           renderRiwayatPertandingan();
+          showToast('Pertandingan berhasil dihapus.');
         } catch (err) {
           handleWriteError(err);
         }
@@ -632,7 +834,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     if (players.length === 0) {
-      alert('Isi minimal satu nama pemain.');
+      showToast('Isi minimal satu nama pemain.', 'error');
       return;
     }
     const jumlahGK = players.filter((p) => p.positionCode === 'GK').length;
@@ -649,7 +851,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       await DB.saveLineup(teamId, format, players);
       renderDaftarLineupTersimpan();
       renderPitchTeamSelectors();
-      alert('Starting XI berhasil disimpan.');
+      showToast('Starting XI berhasil disimpan.');
     } catch (err) {
       handleWriteError(err);
     } finally {
@@ -753,7 +955,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const teamAId = selectPitchA.value;
     const teamBId = selectPitchB.value;
     if (teamAId === teamBId) {
-      alert('Pilih dua tim yang berbeda untuk dibandingkan.');
+      showToast('Pilih dua tim yang berbeda untuk dibandingkan.', 'error');
       return;
     }
     renderPitchPreview(teamAId, teamBId);
@@ -824,11 +1026,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     return div.innerHTML;
   }
 
+  const toastContainer = document.getElementById('toast-container');
+  function showToast(message, type = 'success') {
+    const el = document.createElement('div');
+    el.className = 'toast toast--' + type;
+    el.textContent = message;
+    toastContainer.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('is-visible'));
+    setTimeout(() => {
+      el.classList.remove('is-visible');
+      setTimeout(() => el.remove(), 250);
+    }, 3200);
+  }
+
   // ---------------- Init awal ----------------
   authStatus.textContent = 'Memuat data dari GitHub...';
   await DB.init();
   applyAuthUI();
   renderDaftarTimTersimpan();
+  renderTimAwalVsKelola();
   renderFormPertandingan();
   renderKlasemen();
   renderTopSkor();
