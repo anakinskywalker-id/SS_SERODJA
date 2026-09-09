@@ -362,6 +362,10 @@ label {
 }
 
 .chip__label { white-space: nowrap; }
+.chip__label--clickable { cursor: pointer; }
+.chip__label--clickable:hover { color: var(--pl-cyan); text-decoration: underline; }
+
+.lineup-preview-inline { margin-top: 16px; }
 
 .chip__btn {
   background: rgba(255,255,255,0.08);
@@ -653,7 +657,7 @@ table.standings td.col-pts {
   color: var(--pl-green);
 }
 
-/* ---------------- Starting XI ---------------- */
+/* ---------------- Line Up ---------------- */
 
 .lineup-form__controls {
   display: grid;
