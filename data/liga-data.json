@@ -55,6 +55,51 @@
           "positionCode": "CF"
         }
       ]
+    },
+    "team_mttdu3qx_w8y3a": {
+      "format": "mini",
+      "players": [
+        {
+          "id": "p0",
+          "name": "Satu",
+          "positionCode": "GK"
+        },
+        {
+          "id": "p1",
+          "name": "Dua",
+          "positionCode": "CB"
+        },
+        {
+          "id": "p2",
+          "name": "Tiga",
+          "positionCode": "CB"
+        },
+        {
+          "id": "p3",
+          "name": "Empat",
+          "positionCode": "CM"
+        },
+        {
+          "id": "p4",
+          "name": "Lima",
+          "positionCode": "RM"
+        },
+        {
+          "id": "p5",
+          "name": "Enam",
+          "positionCode": "LM"
+        },
+        {
+          "id": "p6",
+          "name": "Tujuh",
+          "positionCode": "CF"
+        },
+        {
+          "id": "p7",
+          "name": "Delapan",
+          "positionCode": "CF"
+        }
+      ]
     }
   }
 }
