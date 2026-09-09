@@ -9,7 +9,23 @@
       "name": "Putih"
     }
   ],
-  "matches": [],
+  "matches": [
+    {
+      "id": "match_mttdye4r_pwf2v",
+      "createdAt": "2026-09-09T00:54:16.587Z",
+      "teamAId": "team_mttdu3qx_80xwd",
+      "teamBId": "team_mttdu3qx_w8y3a",
+      "scoreA": 1,
+      "scoreB": 0,
+      "scorersA": [
+        {
+          "player": "Si D",
+          "goals": 1
+        }
+      ],
+      "scorersB": []
+    }
+  ],
   "lineups": {
     "team_mttdu3qx_80xwd": {
       "format": "mini",
