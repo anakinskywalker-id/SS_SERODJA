@@ -9,6 +9,7 @@
 
 const APP_CONFIG = {
   // URL Worker hasil deploy, cth: "https://liga-kandang-worker.namamu.workers.dev"
+  APP_NAME: 'SS Serodja',
   WORKER_URL: 'https://ssserodja.area55studio-works.workers.dev',
 
   // URL file JSON mentah di GitHub, cth:
