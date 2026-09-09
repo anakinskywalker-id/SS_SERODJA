@@ -1,5 +1,14 @@
 {
-  "teams": [],
+  "teams": [
+    {
+      "id": "team_mttdu3qx_80xwd",
+      "name": "Merah"
+    },
+    {
+      "id": "team_mttdu3qx_w8y3a",
+      "name": "Putih"
+    }
+  ],
   "matches": [],
   "lineups": {}
 }
