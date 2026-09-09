@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           .map(
             (t) => `
           <span class="chip chip--editable" data-team-id="${t.id}">
-            <span class="chip__label">${escapeHtml(t.name)}</span>
+            <span class="chip__label chip__label--clickable" data-show-lineup="${t.id}" title="Klik untuk lihat line up">${escapeHtml(t.name)}</span>
             ${loggedIn ? `
             <button type="button" class="chip__btn" data-edit-team="${t.id}" title="Ubah nama">&#9998;</button>
             <button type="button" class="chip__btn chip__btn--danger" data-delete-team="${t.id}" title="Hapus tim">&times;</button>` : ''}
@@ -260,7 +260,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     daftarTimTersimpan.querySelectorAll('[data-delete-team]').forEach((btn) => {
       btn.addEventListener('click', () => handleDeleteTeam(btn.dataset.deleteTeam));
     });
+    daftarTimTersimpan.querySelectorAll('[data-show-lineup]').forEach((el) => {
+      el.addEventListener('click', () => toggleTeamLineupPreview(el.dataset.showLineup));
+    });
   }
+
+  let previewedTeamId = null;
+  function toggleTeamLineupPreview(teamId) {
+    const previewBox = document.getElementById('tim-lineup-preview');
+    if (previewedTeamId === teamId) {
+      previewedTeamId = null;
+      previewBox.innerHTML = '';
+      return;
+    }
+    previewedTeamId = teamId;
+
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    const lu = DB.getAllLineups()[teamId];
+
+    if (!team) { previewBox.innerHTML = ''; return; }
+
+    if (!lu) {
+      previewBox.innerHTML = `
+        <div class="lineup-card">
+          <div class="lineup-card__head"><h4>${escapeHtml(team.name)}</h4></div>
+          <p class="empty-note">Tim ini belum punya Line Up tersimpan.</p>
+        </div>`;
+      return;
+    }
+
+    previewBox.innerHTML = buildLineupCardHtml(team, lu);
+  }
+
 
   function startEditTeam(teamId) {
     const chip = daftarTimTersimpan.querySelector(`.chip[data-team-id="${teamId}"]`);
@@ -681,7 +712,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .join('');
   }
 
-  // ---------------- TAB 5: Starting XI ----------------
+  // ---------------- TAB 5: Line Up ----------------
   const FORMAT_INFO = {
     futsal:  { label: 'Futsal', total: 5 },
     mini:    { label: 'Mini Soccer', total: 8 },
@@ -751,7 +782,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pitchControls = document.getElementById('pitch-controls');
   const selectPitchA = document.getElementById('select-pitch-a');
   const selectPitchB = document.getElementById('select-pitch-b');
-  const btnTampilkanPitch = document.getElementById('btn-tampilkan-pitch');
   const pitchPreviewWrap = document.getElementById('pitch-preview-wrap');
 
   selectLineupTim.addEventListener('change', () => loadLineupIntoForm(selectLineupTim.value));
@@ -851,14 +881,35 @@ document.addEventListener('DOMContentLoaded', async () => {
       await DB.saveLineup(teamId, format, players);
       renderDaftarLineupTersimpan();
       renderPitchTeamSelectors();
-      showToast('Starting XI berhasil disimpan.');
+      showToast('Line Up berhasil disimpan.');
     } catch (err) {
       handleWriteError(err);
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Simpan Starting XI';
+      submitBtn.textContent = 'Simpan Line Up';
     }
   });
+
+  function buildLineupCardHtml(team, lu, showActions = false) {
+    const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
+    return `
+      <div class="lineup-card">
+        <div class="lineup-card__head">
+          <h4>${escapeHtml(team.name)}</h4>
+          <span class="lineup-card__format">${formatLabel} &middot; ${formationString(lu.format, lu.players)}</span>
+          ${showActions ? `
+          <div class="lineup-card__actions">
+            <button type="button" class="btn btn--ghost btn--small" data-edit-lineup="${team.id}">Edit</button>
+            <button type="button" class="btn btn--danger btn--small" data-delete-lineup="${team.id}">Hapus</button>
+          </div>` : ''}
+        </div>
+        <div class="lineup-card__players">
+          ${lu.players
+            .map((p) => `<span class="lineup-chip ${p.positionCode === 'GK' ? 'is-gk' : ''}">${escapeHtml(p.name)} <em>${escapeHtml(posLabel(lu.format, p.positionCode))}</em></span>`)
+            .join('')}
+        </div>
+      </div>`;
+  }
 
   function renderDaftarLineupTersimpan() {
     const teams = DB.getTeams();
@@ -867,32 +918,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loggedIn = DB.isLoggedIn();
 
     if (teamsWithLineup.length === 0) {
-      daftarLineupTersimpan.innerHTML = `<p class="empty-note">Belum ada starting XI yang tersimpan.</p>`;
+      daftarLineupTersimpan.innerHTML = `<p class="empty-note">Belum ada line up yang tersimpan.</p>`;
       return;
     }
 
     daftarLineupTersimpan.innerHTML = teamsWithLineup
-      .map((t) => {
-        const lu = lineups[t.id];
-        const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
-        return `
-        <div class="lineup-card">
-          <div class="lineup-card__head">
-            <h4>${escapeHtml(t.name)}</h4>
-            <span class="lineup-card__format">${formatLabel} &middot; ${formationString(lu.format, lu.players)}</span>
-            ${loggedIn ? `
-            <div class="lineup-card__actions">
-              <button type="button" class="btn btn--ghost btn--small" data-edit-lineup="${t.id}">Edit</button>
-              <button type="button" class="btn btn--danger btn--small" data-delete-lineup="${t.id}">Hapus</button>
-            </div>` : ''}
-          </div>
-          <div class="lineup-card__players">
-            ${lu.players
-              .map((p) => `<span class="lineup-chip ${p.positionCode === 'GK' ? 'is-gk' : ''}">${escapeHtml(p.name)} <em>${escapeHtml(posLabel(lu.format, p.positionCode))}</em></span>`)
-              .join('')}
-          </div>
-        </div>`;
-      })
+      .map((t) => buildLineupCardHtml(t, lineups[t.id], loggedIn))
       .join('');
 
     daftarLineupTersimpan.querySelectorAll('[data-edit-lineup]').forEach((btn) => {
@@ -905,7 +936,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     daftarLineupTersimpan.querySelectorAll('[data-delete-lineup]').forEach((btn) => {
       btn.addEventListener('click', async () => {
-        if (!confirm('Hapus starting XI tim ini?')) return;
+        if (!confirm('Hapus line up tim ini?')) return;
         try {
           await DB.deleteLineup(btn.dataset.deleteLineup);
           renderDaftarLineupTersimpan();
@@ -946,20 +977,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     pitchWarning.hidden = true;
 
     const optionsHtml = teamsWithLineup.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+    const prevA = selectPitchA.value;
+    const prevB = selectPitchB.value;
     selectPitchA.innerHTML = optionsHtml;
     selectPitchB.innerHTML = optionsHtml;
-    if (teamsWithLineup.length > 1) selectPitchB.selectedIndex = 1;
+    // Pertahankan pilihan sebelumnya kalau tim itu masih ada; kalau tidak, pakai default.
+    if (teamsWithLineup.some((t) => t.id === prevA)) selectPitchA.value = prevA;
+    if (teamsWithLineup.some((t) => t.id === prevB)) {
+      selectPitchB.value = prevB;
+    } else if (teamsWithLineup.length > 1) {
+      selectPitchB.selectedIndex = 1;
+    }
+
+    renderPitchPreviewFromSelects();
   }
 
-  btnTampilkanPitch.addEventListener('click', () => {
+  function renderPitchPreviewFromSelects() {
     const teamAId = selectPitchA.value;
     const teamBId = selectPitchB.value;
+    if (!teamAId || !teamBId) return;
     if (teamAId === teamBId) {
-      showToast('Pilih dua tim yang berbeda untuk dibandingkan.', 'error');
+      pitchPreviewWrap.innerHTML = `<p class="empty-note">Pilih dua tim yang berbeda untuk melihat perbandingan formasi.</p>`;
       return;
     }
     renderPitchPreview(teamAId, teamBId);
-  });
+  }
+
+  selectPitchA.addEventListener('change', renderPitchPreviewFromSelects);
+  selectPitchB.addEventListener('change', renderPitchPreviewFromSelects);
 
   function renderPitchPreview(teamAId, teamBId) {
     const teams = DB.getTeams();
