@@ -161,6 +161,36 @@ const DB = (() => {
     return _cache.teams;
   }
 
+  // Tambah satu tim baru TANPA menghapus pertandingan/starting XI yang sudah ada.
+  async function addTeam(name) {
+    const newTeam = { id: _genId('team'), name: name.trim() };
+    const newData = { ..._cache, teams: [..._cache.teams, newTeam] };
+    await _persistRemote(newData);
+    _cache = newData;
+    return newTeam;
+  }
+
+  // Ganti nama tim. ID tidak berubah, jadi pertandingan & lineup yang sudah
+  // ada tetap terhubung otomatis ke nama barunya.
+  async function updateTeamName(teamId, newName) {
+    const newTeams = _cache.teams.map((t) => (t.id === teamId ? { ...t, name: newName.trim() } : t));
+    const newData = { ..._cache, teams: newTeams };
+    await _persistRemote(newData);
+    _cache = newData;
+  }
+
+  // Hapus satu tim. Pertandingan yang melibatkan tim ini TETAP disimpan
+  // (akan tampil sebagai "(tim dihapus)"), hanya starting XI tim ini yang
+  // ikut dibersihkan karena sudah tidak relevan.
+  async function deleteTeam(teamId) {
+    const newTeams = _cache.teams.filter((t) => t.id !== teamId);
+    const newLineups = { ..._cache.lineups };
+    delete newLineups[teamId];
+    const newData = { ..._cache, teams: newTeams, lineups: newLineups };
+    await _persistRemote(newData);
+    _cache = newData;
+  }
+
   // ---------- MATCHES ----------
 
   function getMatches() {
@@ -177,6 +207,15 @@ const DB = (() => {
 
   async function deleteMatch(matchId) {
     const newData = { ..._cache, matches: _cache.matches.filter((m) => m.id !== matchId) };
+    await _persistRemote(newData);
+    _cache = newData;
+  }
+
+  // Perbarui pertandingan yang sudah tersimpan (skor/pencetak gol salah ketik dsb.)
+  // tanpa perlu hapus lalu input ulang dari nol.
+  async function updateMatch(matchId, updatedFields) {
+    const newMatches = _cache.matches.map((m) => (m.id === matchId ? { ...m, ...updatedFields } : m));
+    const newData = { ..._cache, matches: newMatches };
     await _persistRemote(newData);
     _cache = newData;
   }
@@ -231,9 +270,13 @@ const DB = (() => {
     logout,
     getTeams,
     setTeams,
+    addTeam,
+    updateTeamName,
+    deleteTeam,
     getMatches,
     addMatch,
     deleteMatch,
+    updateMatch,
     getLineup,
     getAllLineups,
     saveLineup,
