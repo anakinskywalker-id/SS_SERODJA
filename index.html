@@ -56,7 +56,7 @@
   <button class="tabs__btn" data-tab="pertandingan">Pertandingan</button>
   <button class="tabs__btn" data-tab="klasemen">Table</button>
   <button class="tabs__btn" data-tab="topskor">Top Skor</button>
-  <button class="tabs__btn" data-tab="startingxi">Starting XI</button>
+  <button class="tabs__btn" data-tab="startingxi">Line Up</button>
 </nav>
 
 <main class="app">
@@ -99,6 +99,7 @@
     </div>
 
     <div id="daftar-tim-tersimpan" class="saved-teams"></div>
+    <div id="tim-lineup-preview" class="lineup-preview-inline"></div>
   </section>
 
   <!-- ================= INPUT PERTANDINGAN ================= -->
@@ -195,12 +196,12 @@
   <!-- ================= STARTING XI ================= -->
   <section id="tab-startingxi" class="panel">
     <div class="panel__head">
-      <h2>Starting XI</h2>
+      <h2>Line Up</h2>
       <p>Susun pemain inti tiap tim sesuai format pertandingan yang dipakai.</p>
     </div>
 
-    <p id="startingxi-warning" class="warning" hidden>Simpan minimal 1 tim terlebih dahulu di tab "Tim" sebelum menyusun starting XI.</p>
-    <p id="startingxi-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk menyusun atau mengubah starting XI.</p>
+    <p id="startingxi-warning" class="warning" hidden>Simpan minimal 1 tim terlebih dahulu di tab "Tim" sebelum menyusun line up.</p>
+    <p id="startingxi-readonly-note" class="notice" hidden>Anda melihat mode publik (baca saja). Login sebagai admin untuk menyusun atau mengubah line up.</p>
 
     <div id="startingxi-admin-area">
       <form id="form-startingxi" class="lineup-form">
@@ -221,26 +222,25 @@
 
         <div id="lineup-slots" class="lineup-slots"></div>
 
-        <button type="submit" class="btn btn--primary">Simpan Starting XI</button>
+        <button type="submit" class="btn btn--primary">Simpan Line Up</button>
       </form>
     </div>
 
     <div class="panel__head panel__head--tight">
-      <h3>Starting XI Tersimpan</h3>
+      <h3>Line Up Tersimpan</h3>
       <p>Klik "Edit" pada kartu tim untuk mengubah nama atau posisi pemain.</p>
     </div>
     <div id="daftar-lineup-tersimpan" class="lineup-saved-list"></div>
 
     <div class="panel__head panel__head--tight">
       <h3>Preview Formasi Head-to-Head</h3>
-      <p>Pilih dua tim yang sudah punya Starting XI tersimpan untuk melihat perbandingan formasi di lapangan.</p>
+      <p>Pilih dua tim yang sudah punya Line Up tersimpan — formasi langsung tampil di bawah begitu dipilih.</p>
     </div>
-    <p id="pitch-warning" class="warning" hidden>Simpan Starting XI untuk minimal 2 tim terlebih dahulu.</p>
+    <p id="pitch-warning" class="warning" hidden>Simpan Line Up untuk minimal 2 tim terlebih dahulu.</p>
     <div id="pitch-controls" class="pitch-controls">
       <select id="select-pitch-a"></select>
       <span class="pitch-controls__vs">VS</span>
       <select id="select-pitch-b"></select>
-      <button id="btn-tampilkan-pitch" type="button" class="btn btn--ghost btn--small">Tampilkan Formasi</button>
     </div>
     <div id="pitch-preview-wrap"></div>
   </section>
