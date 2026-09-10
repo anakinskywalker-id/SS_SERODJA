@@ -729,11 +729,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // dipakai untuk menyusun kolom di tampilan lapangan & menghitung string formasi otomatis.
   const POSITION_CATALOG = {
     futsal: [
-      { code: 'GK', label: 'Kiper', line: 0 },
-      { code: 'FIXO', label: 'Fixo (Bek)', line: 1 },
-      { code: 'ALA_KANAN', label: 'Ala Kanan', line: 2 },
-      { code: 'ALA_KIRI', label: 'Ala Kiri', line: 2 },
-      { code: 'PIVOT', label: 'Pivot', line: 3 }
+      { code: 'GK', label: 'Kiper', short: 'GK', line: 0 },
+      { code: 'FIXO', label: 'Fixo (Bek)', short: 'FIXO', line: 1 },
+      { code: 'ALA_KANAN', label: 'Ala Kanan', short: 'RW', line: 2 },
+      { code: 'ALA_KIRI', label: 'Ala Kiri', short: 'LW', line: 2 },
+      { code: 'PIVOT', label: 'Pivot', short: 'PIV', line: 3 }
     ],
     mini: [
       { code: 'GK', label: 'Kiper', line: 0 },
@@ -762,9 +762,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     ]
   };
 
+  // Nama lengkap (Indonesia) — dipakai di dropdown pilihan & tooltip supaya
+  // tetap jelas maksudnya saat memilih/menyusun.
   function posLabel(format, code) {
     const found = POSITION_CATALOG[format]?.find((p) => p.code === code);
     return found ? found.label : code;
+  }
+
+  // Kode singkat — dipakai di chip, kartu Line Up, dan gambar hasil share
+  // supaya tidak makan tempat (CB, CMF, DMF, LMF, CF, dst).
+  function posShort(format, code) {
+    const found = POSITION_CATALOG[format]?.find((p) => p.code === code);
+    return found ? (found.short || found.code) : code;
   }
 
   function posLine(format, code) {
@@ -774,7 +783,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   function positionOptionsHtml(format, selectedCode) {
     return POSITION_CATALOG[format]
-      .map((p) => `<option value="${p.code}" ${p.code === selectedCode ? 'selected' : ''}>${escapeHtml(p.label)}</option>`)
+      .map((p) => `<option value="${p.code}" ${p.code === selectedCode ? 'selected' : ''}>${escapeHtml(p.label)} (${escapeHtml(p.short || p.code)})</option>`)
       .join('');
   }
 
@@ -912,7 +921,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         </div>
         <div class="lineup-card__players">
           ${lu.players
-            .map((p) => `<span class="lineup-chip ${p.positionCode === 'GK' ? 'is-gk' : ''}">${escapeHtml(p.name)} <em>${escapeHtml(posLabel(lu.format, p.positionCode))}</em></span>`)
+            .map((p) => `<span class="lineup-chip ${p.positionCode === 'GK' ? 'is-gk' : ''}" title="${escapeHtml(posLabel(lu.format, p.positionCode))}">${escapeHtml(p.name)} <em>${escapeHtml(posShort(lu.format, p.positionCode))}</em></span>`)
             .join('')}
         </div>
       </div>`;
@@ -1050,7 +1059,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               (p) => `
               <div class="pitch__player">
                 <div class="pitch__player-name">${escapeHtml(p.name)}</div>
-                <div class="pitch__player-pos">${escapeHtml(posLabel(format, p.positionCode))}</div>
+                <div class="pitch__player-pos">${escapeHtml(posShort(format, p.positionCode))}</div>
               </div>`
             )
             .join('');
@@ -1130,13 +1139,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const EXPORT_FOOTER_HTML = `<div class="export-card__footer">Dibuat dengan ${escapeHtml(APP_CONFIG.APP_NAME || 'Liga Kandang')}</div>`;
 
-  async function exportHtmlToJpeg(innerHtml, filename, shareTitle) {
+  async function exportHtmlToJpeg(innerHtml, filename, shareTitle, width = 640) {
     const wrapper = document.createElement('div');
     wrapper.className = 'export-card';
     wrapper.style.position = 'fixed';
     wrapper.style.left = '-9999px';
     wrapper.style.top = '0';
-    wrapper.style.width = '640px';
+    wrapper.style.width = width + 'px';
     wrapper.innerHTML = innerHtml;
     document.body.appendChild(wrapper);
 
@@ -1271,6 +1280,83 @@ document.addEventListener('DOMContentLoaded', async () => {
     await exportHtmlToJpeg(html, `hasil-pertandingan-${slugifyAppName()}.jpg`, `Hasil Pertandingan ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
   }
 
+  // Hitung posisi X (garis lini, kiper=paling kiri sampai penyerang=paling
+  // kanan) dan Y (menyebar rata secara vertikal antar pemain di lini yang
+  // sama) untuk tiap pemain, dipakai menempatkan pill di lapangan perspektif.
+  function computePitchPositions(format, players) {
+    const catalog = POSITION_CATALOG[format];
+    const maxLine = Math.max(...catalog.map((p) => p.line));
+    const byLine = {};
+    players.forEach((p) => {
+      const line = posLine(format, p.positionCode);
+      if (!byLine[line]) byLine[line] = [];
+      byLine[line].push(p);
+    });
+
+    const positioned = [];
+    Object.keys(byLine).forEach((lineKey) => {
+      const line = parseInt(lineKey, 10);
+      const group = byLine[line];
+      const x = 10 + (maxLine === 0 ? 0 : (line / maxLine) * 72);
+      group.forEach((p, i) => {
+        const count = group.length;
+        const y = count === 1 ? 50 : 15 + i * (70 / (count - 1));
+        positioned.push({ player: p, x, y, isGK: p.positionCode === 'GK' });
+      });
+    });
+    return positioned;
+  }
+
+  function buildLineupPitchExportHtml(team, lu) {
+    const appName = APP_CONFIG.APP_NAME || 'Liga Kandang';
+    const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
+    const positions = computePitchPositions(lu.format, lu.players);
+
+    const pillsHtml = positions
+      .map(
+        (pos) => `
+        <div class="export-pitch__player ${pos.isGK ? 'is-gk' : ''}" style="left:${pos.x}%; top:${pos.y}%;">
+          ${pos.isGK ? '<span class="export-pitch__gk-badge">GK</span>' : ''}
+          <span class="export-pitch__name">${escapeHtml(pos.player.name)}</span>
+          <span class="export-pitch__sep">|</span>
+          <span class="export-pitch__pos">${escapeHtml(posShort(lu.format, pos.player.positionCode))}</span>
+        </div>`
+      )
+      .join('');
+
+    return `
+      <div class="export-pitch-card__head">
+        <div class="export-pitch-card__brand">
+          <svg class="export-pitch-card__crest" viewBox="0 0 24 24" width="52" height="52">
+            <defs>
+              <linearGradient id="crestGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#04F5FF"/>
+                <stop offset="50%" stop-color="#00FF85"/>
+                <stop offset="100%" stop-color="#E90052"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 2 L21 5 V11 C21 16 17 20 12 22 C7 20 3 16 3 11 V5 Z" fill="url(#crestGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          </svg>
+          <div>
+            <div class="export-pitch-card__title">${escapeHtml(appName)} <span class="export-pitch-card__title-sep">|</span> Line Up</div>
+            <div class="export-pitch-card__subtitle">Tim ${escapeHtml(team.name)}</div>
+          </div>
+        </div>
+        <div class="export-pitch-card__badge">${escapeHtml(formatLabel.toUpperCase())} &middot; ${formationString(lu.format, lu.players)}</div>
+      </div>
+
+      <div class="export-pitch">
+        <div class="export-pitch__circle"></div>
+        <div class="export-pitch__box"></div>
+        ${pillsHtml}
+      </div>
+
+      <div class="export-card__footer export-card__footer--fancy">
+        <span>&#10148;</span> PRODUCED WITH <strong>${escapeHtml(appName.toUpperCase())} ANALYTICS</strong> <span>&#10148;</span>
+      </div>
+    `;
+  }
+
   async function shareLineup(teamId) {
     const team = DB.getTeams().find((t) => t.id === teamId);
     const lu = DB.getAllLineups()[teamId];
@@ -1278,12 +1364,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       showToast('Tim ini belum punya Line Up tersimpan.', 'error');
       return;
     }
-    const html = `
-      ${exportHeaderHtml('Line Up')}
-      ${buildLineupCardHtml(team, lu, false, false)}
-      ${EXPORT_FOOTER_HTML}
-    `;
-    await exportHtmlToJpeg(html, `lineup-${team.name}.jpg`, `Line Up ${team.name}`);
+    const html = buildLineupPitchExportHtml(team, lu);
+    await exportHtmlToJpeg(html, `lineup-${team.name}-${slugifyAppName()}.jpg`, `Line Up ${team.name}`, 960);
   }
 
   document.getElementById('btn-share-klasemen').addEventListener('click', shareStandings);
