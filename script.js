@@ -1346,8 +1346,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       </div>
 
       <div class="export-pitch">
-        <div class="export-pitch__circle"></div>
-        <div class="export-pitch__box"></div>
+        <svg class="export-pitch__svg" viewBox="0 0 1000 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="pitchFill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.07)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0.015)"/>
+            </linearGradient>
+          </defs>
+          <polygon points="50,0 950,0 1000,500 0,500" fill="url(#pitchFill)" stroke="rgba(255,255,255,0.28)" stroke-width="3"/>
+          <ellipse cx="1000" cy="250" rx="140" ry="140" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+          <rect x="2" y="100" width="128" height="300" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+        </svg>
         ${pillsHtml}
       </div>
 
