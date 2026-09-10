@@ -987,10 +987,134 @@ table.standings td.col-pts {
   padding-top: 14px;
 }
 
+.export-card__footer--fancy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  border-top: none;
+}
+.export-card__footer--fancy strong { color: var(--pl-white); font-weight: 800; }
+
 .export-card table.standings { font-size: 15px; }
 .export-card table.standings thead th { font-size: 13px; }
 .export-card .topscorer-list { border: 1px solid var(--pl-border); border-radius: var(--radius); padding: 4px 16px; }
 .export-card .lineup-card { border: none; background: transparent; padding: 0; }
+
+/* ---------------- Lapangan perspektif untuk share Line Up ---------------- */
+
+.export-pitch-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.export-pitch-card__brand { display: flex; align-items: center; gap: 16px; }
+.export-pitch-card__crest { flex-shrink: 0; }
+
+.export-pitch-card__title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 28px;
+  color: var(--pl-white);
+}
+.export-pitch-card__title-sep { color: var(--pl-ink-dim); font-weight: 400; margin: 0 4px; }
+
+.export-pitch-card__subtitle {
+  font-size: 15px;
+  color: var(--pl-ink-soft);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.export-pitch-card__badge {
+  border: 1.5px solid var(--pl-cyan);
+  color: var(--pl-cyan);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.export-pitch {
+  position: relative;
+  height: 420px;
+  clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 40px, rgba(255,255,255,0) 40px 80px),
+    linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+  overflow: hidden;
+}
+
+.export-pitch__circle {
+  position: absolute;
+  right: -70px;
+  top: 50%;
+  width: 220px;
+  height: 220px;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.export-pitch__box {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: 14%;
+  border: 2px solid rgba(255,255,255,0.18);
+  border-left: none;
+}
+
+.export-pitch__player {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15,10,20,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-pill);
+  padding: 10px 16px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+.export-pitch__name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--pl-white);
+}
+.export-pitch__sep { color: var(--pl-ink-dim); }
+.export-pitch__pos { font-size: 13px; color: var(--pl-ink-soft); font-weight: 600; }
+
+.export-pitch__player.is-gk { border-color: var(--pl-pink); padding-left: 6px; }
+.export-pitch__player.is-gk .export-pitch__name { color: var(--pl-pink); }
+
+.export-pitch__gk-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--pl-bg);
+  border: 2px solid var(--pl-cyan);
+  color: var(--pl-white);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 10.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
 
 .export-match__score {
   display: flex;
