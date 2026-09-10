@@ -1,1164 +1,1394 @@
-/* -----------------------------------------------------------------------
-   Liga Kandang — stylesheet
-   Palet & tipografi terinspirasi identitas visual Premier League:
-   ungu gelap sebagai dasar, gradasi ungu→cyan sebagai aksen hero,
-   hijau/cyan/pink sebagai warna sorotan.
-   ----------------------------------------------------------------------- */
-
-:root {
-  --pl-bg:        #0D0018;   /* dasar halaman, hampir hitam-ungu */
-  --pl-purple:    #38003C;   /* ungu brand utama */
-  --pl-purple-2:  #2A0030;   /* panel/card gelap */
-  --pl-purple-3:  #1D0021;   /* strip tabs */
-  --pl-cyan:      #04F5FF;
-  --pl-green:     #00FF85;
-  --pl-pink:      #E90052;
-  --pl-white:     #FFFFFF;
-  --pl-ink-soft:  #C7B8CE;   /* teks sekunder di atas gelap */
-  --pl-ink-dim:   #8C7C93;
-  --pl-border:    #3A1E40;
-
-  --font-display: 'Poppins', 'Arial Black', sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
-
-  --radius: 8px;
-  --radius-pill: 999px;
-}
-
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  padding: 0;
-  background: var(--pl-bg);
-  color: var(--pl-white);
-  font-family: var(--font-body);
-  min-height: 100%;
-}
-
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-p { margin: 0; }
-button { font-family: inherit; }
-
-/* ---------------- Top bar ---------------- */
-
-.topbar {
-  background: var(--pl-purple);
-  border-bottom: 1px solid var(--pl-border);
-}
-
-.topbar__inner {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.brand { display: flex; align-items: center; gap: 10px; }
-
-.brand__mark {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: conic-gradient(var(--pl-cyan), var(--pl-green), var(--pl-pink), var(--pl-cyan));
-  flex-shrink: 0;
-}
-
-.brand__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--pl-white);
-}
-
-.topbar__tagline {
-  font-size: 12.5px;
-  color: var(--pl-ink-soft);
-}
-
-.topbar__auth {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* ---------------- Login modal ---------------- */
-
-.login-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  padding: 20px;
-}
-
-.login-modal[hidden] {
-  display: none;
-}
-
-.login-modal__box {
-  background: var(--pl-purple-2);
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 24px;
-  width: 100%;
-  max-width: 360px;
-}
-
-.login-modal__box h3 {
-  font-size: 19px;
-  font-weight: 700;
-  color: var(--pl-white);
-  margin-bottom: 8px;
-}
-
-.login-modal__box > p {
-  color: var(--pl-ink-soft);
-  font-size: 13px;
-  line-height: 1.5;
-  margin-bottom: 16px;
-}
-
-.login-modal__box form { display: flex; flex-direction: column; gap: 14px; }
-.login-modal__box input { width: 100%; }
-
-.login-modal__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.notice {
-  background: rgba(4,245,255,0.08);
-  color: var(--pl-cyan);
-  border: 1px solid rgba(4,245,255,0.3);
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  font-size: 13.5px;
-  margin-bottom: 16px;
-}
-
-/* ---------------- Hero banner ---------------- */
-
-.hero {
-  background: linear-gradient(115deg, #7A2FD6 0%, #963CFF 35%, #22C7EA 75%, #04F5FF 100%);
-  padding: 34px 20px 30px;
-}
-
-.hero h1 {
-  max-width: 1000px;
-  margin: 0 auto;
-  font-size: 34px;
-  font-weight: 800;
-  color: var(--pl-white);
-}
-
-.hero p {
-  max-width: 1000px;
-  margin: 6px auto 0;
-  font-size: 14px;
-  color: rgba(255,255,255,0.9);
-  font-weight: 500;
-}
-
-/* ---------------- Tabs ---------------- */
-
-.tabs {
-  background: var(--pl-purple-3);
-  border-bottom: 1px solid var(--pl-border);
-  display: flex;
-  gap: 4px;
-  padding: 0 20px;
-  overflow-x: auto;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.tabs__btn {
-  background: transparent;
-  border: none;
-  border-bottom: 3px solid transparent;
-  color: var(--pl-ink-soft);
-  padding: 14px 16px 12px;
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.tabs__btn:hover { color: var(--pl-white); }
-
-.tabs__btn.is-active {
-  color: var(--pl-white);
-  border-bottom-color: var(--pl-white);
-}
-
-/* ---------------- Layout / panels ---------------- */
-
-.app {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px 20px 60px;
-}
-
-.panel {
-  display: none;
-  background: var(--pl-purple-2);
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 26px 26px 30px;
-}
-
-.panel.is-active { display: block; }
-
-.panel__head {
-  margin-bottom: 20px;
-  border-left: 3px solid var(--pl-cyan);
-  padding-left: 14px;
-}
-
-.panel__head--tight { margin-top: 34px; margin-bottom: 14px; }
-
-.panel__head h2 { font-size: 21px; color: var(--pl-white); font-weight: 700; }
-.panel__head h3 { font-size: 16px; color: var(--pl-white); font-weight: 700; }
-.panel__head p {
-  color: var(--pl-ink-soft);
-  font-size: 13.5px;
-  margin-top: 5px;
-  line-height: 1.5;
-}
-
-.panel__actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-  flex-wrap: wrap;
-}
-
-/* ---------------- Buttons / inputs ---------------- */
-
-.btn {
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 11px 20px;
-  font-size: 13.5px;
-  font-weight: 700;
-  font-family: var(--font-display);
-  cursor: pointer;
-  transition: transform 0.08s ease, filter 0.15s ease;
-}
-.btn:active { transform: translateY(1px); }
-
-.btn--primary {
-  background: var(--pl-green);
-  color: #06210F;
-}
-.btn--primary:hover { filter: brightness(1.06); }
-.btn--primary:disabled { background: #4B5750; color: #93A199; cursor: not-allowed; }
-
-.btn--ghost {
-  background: transparent;
-  color: var(--pl-white);
-  border: 1.5px solid var(--pl-border);
-}
-.btn--ghost:hover { border-color: var(--pl-cyan); color: var(--pl-cyan); }
-
-.btn--danger {
-  background: transparent;
-  color: var(--pl-pink);
-  border: 1.5px solid var(--pl-pink);
-}
-.btn--danger:hover { background: rgba(233,0,82,0.1); }
-
-.btn--small { padding: 7px 14px; font-size: 12px; }
-
-input, select {
-  font-family: var(--font-body);
-  font-size: 14px;
-  padding: 9px 11px;
-  border: 1.5px solid var(--pl-border);
-  border-radius: var(--radius);
-  background: #170022;
-  color: var(--pl-white);
-}
-input::placeholder { color: var(--pl-ink-dim); }
-
-input:focus, select:focus, button:focus-visible {
-  outline: 2.5px solid var(--pl-cyan);
-  outline-offset: 1px;
-}
-
-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--pl-ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.row-inline {
-  display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.row-inline label { display: block; margin-bottom: 6px; }
-.row-inline input { width: 140px; }
-
-.field { display: flex; flex-direction: column; gap: 6px; }
-
-/* ---------------- Team setup ---------------- */
-
-.team-slots {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-  margin-top: 18px;
-}
-
-.team-slot { display: flex; flex-direction: column; gap: 6px; }
-.team-slot input { width: 100%; }
-
-.saved-teams { margin-top: 22px; }
-
-.saved-teams__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.chip {
-  background: var(--pl-purple);
-  border: 1px solid var(--pl-border);
-  color: var(--pl-white);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.chip--editable {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 6px 4px 14px;
-}
-
-.chip__label { white-space: nowrap; }
-.chip__label--clickable { cursor: pointer; }
-.chip__label--clickable:hover { color: var(--pl-cyan); text-decoration: underline; }
-
-.lineup-preview-inline { margin-top: 16px; }
-
-.chip__btn {
-  background: rgba(255,255,255,0.08);
-  border: none;
-  color: var(--pl-ink-soft);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.chip__btn:hover { background: rgba(255,255,255,0.18); color: var(--pl-white); }
-.chip__btn--danger:hover { background: rgba(233,0,82,0.25); color: var(--pl-pink); }
-
-.chip__edit-input {
-  background: #170022;
-  border: 1px solid var(--pl-cyan);
-  border-radius: var(--radius-pill);
-  color: var(--pl-white);
-  padding: 4px 10px;
-  font-size: 13px;
-  width: 140px;
-}
-
-.scorer-counter {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--pl-ink-dim);
-}
-.scorer-counter--ok { color: var(--pl-green); }
-.scorer-counter--off { color: var(--pl-pink); }
-
-/* ---------------- Toast notifications ---------------- */
-
-.toast-container {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  z-index: 100;
-  width: min(90vw, 380px);
-  align-items: center;
-}
-
-.toast {
-  background: var(--pl-purple-2);
-  border: 1px solid var(--pl-border);
-  border-left: 4px solid var(--pl-green);
-  color: var(--pl-white);
-  padding: 12px 16px;
-  border-radius: var(--radius);
-  font-size: 13.5px;
-  font-weight: 600;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  width: 100%;
-  text-align: center;
-}
-.toast.is-visible { opacity: 1; transform: translateY(0); }
-.toast--error { border-left-color: var(--pl-pink); }
-
-/* ---------------- Match form ---------------- */
-
-.warning {
-  background: rgba(233,0,82,0.1);
-  color: #FF6FA0;
-  border: 1px solid rgba(233,0,82,0.35);
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  font-size: 13.5px;
-  margin-bottom: 16px;
-}
-
-.match-form__teams {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  gap: 16px;
-  align-items: end;
-  margin-bottom: 22px;
-}
-
-.team-side { display: flex; flex-direction: column; gap: 8px; }
-.team-side select { width: 100%; }
-.team-side input[type="number"] {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 26px;
-  text-align: center;
-  width: 100%;
-  padding: 8px;
-}
-
-.match-form__vs {
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--pl-ink-dim);
-  font-size: 14px;
-  padding-bottom: 12px;
-}
-
-.scorers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 10px;
-}
-
-.scorers__col h3 {
-  font-size: 13.5px;
-  color: var(--pl-cyan);
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-
-.scorer-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
-
-.scorer-row {
-  display: grid;
-  grid-template-columns: 1fr 64px 28px;
-  gap: 6px;
-}
-
-.scorer-row input[type="text"] { width: 100%; }
-.scorer-row input[type="number"] { width: 100%; text-align: center; }
-
-.scorer-row__remove {
-  background: transparent;
-  border: 1.5px solid var(--pl-border);
-  border-radius: var(--radius);
-  color: var(--pl-ink-dim);
-  cursor: pointer;
-  font-size: 15px;
-  line-height: 1;
-}
-.scorer-row__remove:hover { border-color: var(--pl-pink); color: var(--pl-pink); }
-
-/* ---------------- Match history ---------------- */
-
-.match-history { display: flex; flex-direction: column; gap: 10px; }
-
-.match-card {
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-  background: rgba(255,255,255,0.02);
-}
-
-.match-card__score {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 17px;
-  color: var(--pl-white);
-}
-
-.match-card__score b { color: var(--pl-green); font-weight: 800; }
-
-.match-card__scorers {
-  font-size: 12.5px;
-  color: var(--pl-ink-soft);
-  flex-basis: 100%;
-}
-
-.match-card__actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.match-card__remove,
-.match-card__edit {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 12.5px;
-  font-weight: 700;
-  text-decoration: underline;
-}
-.match-card__remove { color: var(--pl-pink); }
-.match-card__edit { color: var(--pl-cyan); }
-
-.match-card__share {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--pl-border);
-  color: var(--pl-ink-soft);
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.match-card__share:hover { color: var(--pl-cyan); border-color: var(--pl-cyan); }
-
-.empty-note {
-  color: var(--pl-ink-dim);
-  font-size: 13.5px;
-  padding: 14px 0;
-}
-
-/* ---------------- Standings table ---------------- */
-
-.table-wrap { overflow-x: auto; }
-
-table.standings {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13.5px;
-  min-width: 560px;
-}
-
-table.standings thead th {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 11.5px;
-  letter-spacing: 0.03em;
-  color: var(--pl-ink-soft);
-  text-align: center;
-  padding: 10px 6px;
-  border-bottom: 1px solid var(--pl-border);
-}
-
-table.standings .col-rank, table.standings .col-team { text-align: left; }
-
-table.standings tbody td {
-  padding: 12px 6px;
-  text-align: center;
-  border-bottom: 1px solid var(--pl-border);
-  color: var(--pl-white);
-}
-
-table.standings tbody tr:hover { background: rgba(255,255,255,0.03); }
-
-table.standings tbody tr:nth-child(-n+4) td.col-rank {
-  box-shadow: inset 3px 0 0 var(--pl-cyan);
-  padding-left: 9px;
-}
-
-table.standings td.col-rank { font-weight: 700; color: var(--pl-ink-soft); }
-
-table.standings td.col-team {
-  text-align: left;
-  font-weight: 700;
-}
-
-table.standings td.col-pts {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--pl-green);
-}
-
-.table-legend {
-  margin-top: 14px;
-  font-size: 12px;
-  color: var(--pl-ink-dim);
-}
-
-/* ---------------- Top scorer list ---------------- */
-
-.topscorer-list { display: flex; flex-direction: column; }
-
-.topscorer-row {
-  display: grid;
-  grid-template-columns: 40px 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-  padding: 13px 4px;
-  border-bottom: 1px solid var(--pl-border);
-}
-
-.topscorer-row__rank {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 19px;
-  color: var(--pl-ink-dim);
-}
-.topscorer-row:nth-child(1) .topscorer-row__rank { color: var(--pl-cyan); }
-.topscorer-row:nth-child(2) .topscorer-row__rank,
-.topscorer-row:nth-child(3) .topscorer-row__rank { color: var(--pl-ink-soft); }
-
-.topscorer-row__player { font-weight: 700; color: var(--pl-white); }
-.topscorer-row__team { color: var(--pl-ink-soft); font-size: 12.5px; }
-
-.topscorer-row__goals {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 17px;
-  color: var(--pl-green);
-}
-
-/* ---------------- Line Up ---------------- */
-
-.lineup-form__controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.lineup-form__controls select { width: 100%; }
-
-.lineup-slots {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.lineup-slot {
-  display: grid;
-  grid-template-columns: 26px 1fr 1fr;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 6px 8px;
-}
-
-.lineup-slot__num {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--pl-purple);
-  color: var(--pl-ink-soft);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.lineup-slot__num.is-gk { background: var(--pl-pink); color: var(--pl-white); }
-
-.lineup-slot__input {
-  border: none;
-  background: transparent;
-  padding: 6px 2px;
-  width: 100%;
-}
-.lineup-slot__input:focus { outline: none; }
-
-.lineup-slot__position {
-  border: 1px solid var(--pl-border);
-  background: #170022;
-  font-size: 12px;
-  padding: 6px 6px;
-  border-radius: var(--radius);
-  width: 100%;
-}
-
-.lineup-saved-list { display: flex; flex-direction: column; gap: 14px; }
-
-.lineup-card {
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  background: rgba(255,255,255,0.02);
-}
-
-.lineup-card__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.lineup-card__head h4 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--pl-white);
-  margin-right: auto;
-}
-
-.lineup-card__format {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--pl-cyan);
-  border: 1px solid var(--pl-cyan);
-  border-radius: var(--radius-pill);
-  padding: 3px 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-}
-
-.lineup-card__actions { display: flex; gap: 6px; }
-
-.lineup-card__players {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.lineup-chip {
-  background: var(--pl-purple);
-  border: 1px solid var(--pl-border);
-  color: var(--pl-white);
-  padding: 5px 12px;
-  border-radius: var(--radius-pill);
-  font-size: 12.5px;
-  font-weight: 600;
-}
-.lineup-chip em {
-  font-style: normal;
-  color: var(--pl-ink-soft);
-  font-weight: 500;
-  font-size: 11px;
-  margin-left: 5px;
-}
-.lineup-chip.is-gk {
-  border-color: var(--pl-pink);
-  color: var(--pl-pink);
-}
-.lineup-chip.is-gk em { color: var(--pl-pink); opacity: 0.75; }
-
-/* ---------------- Pitch head-to-head preview ---------------- */
-
-.pitch-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-}
-.pitch-controls select { flex: 1; min-width: 160px; }
-.pitch-controls__vs {
-  font-family: var(--font-display);
-  font-weight: 800;
-  color: var(--pl-ink-dim);
-  font-size: 13px;
-}
-
-.pitch-heading {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 13.5px;
-  color: var(--pl-ink-soft);
-}
-.pitch-heading__team { display: flex; align-items: center; gap: 8px; }
-.pitch-heading__team strong { color: var(--pl-white); font-family: var(--font-display); font-size: 15px; }
-.pitch-heading__team b { color: var(--pl-cyan); }
-.pitch-heading__dot {
-  width: 12px; height: 12px; border-radius: 50%;
-  background: var(--pl-cyan);
-  flex-shrink: 0;
-}
-.pitch-heading__dot--b { background: var(--pl-pink); }
-
-/* Lapangan selalu vertikal: tim atas menyerang ke bawah, tim bawah
-   menyerang ke atas, dipisah garis tengah horizontal — mengikuti gaya
-   tampilan susunan pemain Livescore/Sofascore. Cukup scroll untuk lihat
-   semua lini. */
-.pitch {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 720px;
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 60px, rgba(255,255,255,0) 60px 120px),
-    linear-gradient(180deg, #123324, #0E2A1D);
-  border: 2px solid rgba(255,255,255,0.35);
-  border-radius: var(--radius);
-  overflow: hidden;
-  padding: 16px 10px;
-  gap: 0;
-}
-
-.pitch__center-line {
-  position: absolute;
-  top: 50%; left: 0; right: 0;
-  height: 0;
-  border-top: 2px dashed rgba(255,255,255,0.4);
-}
-
-.pitch__center-circle {
-  position: absolute;
-  top: 50%; left: 50%;
-  width: 110px; height: 110px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Kotak "penalti" dekoratif di ujung atas & bawah, kesan garis lapangan asli */
-.pitch::before,
-.pitch::after {
-  content: '';
-  position: absolute;
-  left: 22%;
-  right: 22%;
-  height: 13%;
-  border: 2px solid rgba(255,255,255,0.3);
-}
-.pitch::before { top: 0; border-top: none; }
-.pitch::after { bottom: 0; border-bottom: none; }
-
-.pitch__side {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
-}
-
-.pitch__col {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: space-evenly;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 2px;
-}
-
-.pitch__player {
-  background: rgba(0,0,0,0.45);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 8px;
-  padding: 6px 9px;
-  text-align: center;
-  flex: 0 1 88px;
-  max-width: 120px;
-}
-
-.pitch__player-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--pl-white);
-  line-height: 1.25;
-  overflow-wrap: break-word;
-}
-
-.pitch__player-pos {
-  font-size: 9.5px;
-  color: var(--pl-cyan);
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  margin-top: 2px;
-}
-
-/* ---------------- Tombol & kartu export/share ---------------- */
-
-.btn--share {
-  margin-bottom: 16px;
-}
-
-/* Kartu ini dirender di luar layar (position:fixed, left:-9999px) khusus
-   untuk dipotret html2canvas jadi JPEG — desainnya sengaja dibuat mandiri
-   (ada judul liga & footer) supaya enak dibaca walau dilepas dari konteks
-   aplikasi, misal saat dikirim ke grup WhatsApp. */
-.export-card {
-  background: linear-gradient(180deg, var(--pl-purple-2), var(--pl-bg));
-  padding: 28px;
-  font-family: var(--font-body);
-}
-
-.export-card__header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
-.export-card__dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: conic-gradient(var(--pl-cyan), var(--pl-green), var(--pl-pink), var(--pl-cyan));
-  flex-shrink: 0;
-}
-
-.export-card__brand {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--pl-white);
-}
-
-.export-card__subtitle {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 26px;
-  color: var(--pl-white);
-  margin-bottom: 20px;
-}
-
-.export-card__footer {
-  margin-top: 22px;
-  text-align: center;
-  font-size: 11.5px;
-  color: var(--pl-ink-dim);
-  border-top: 1px solid var(--pl-border);
-  padding-top: 14px;
-}
-
-.export-card__footer--fancy {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  border-top: none;
-}
-.export-card__footer--fancy strong { color: var(--pl-white); font-weight: 800; }
-
-.export-card table.standings { font-size: 15px; }
-.export-card table.standings thead th { font-size: 13px; }
-.export-card .topscorer-list { border: 1px solid var(--pl-border); border-radius: var(--radius); padding: 4px 16px; }
-.export-card .lineup-card { border: none; background: transparent; padding: 0; }
-
-/* ---------------- Lapangan perspektif untuk share Line Up ---------------- */
-
-.export-pitch-card__head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 22px;
-}
-
-.export-pitch-card__brand { display: flex; align-items: center; gap: 16px; }
-.export-pitch-card__crest { flex-shrink: 0; }
-
-.export-pitch-card__title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 28px;
-  color: var(--pl-white);
-}
-.export-pitch-card__title-sep { color: var(--pl-ink-dim); font-weight: 400; margin: 0 4px; }
-
-.export-pitch-card__subtitle {
-  font-size: 15px;
-  color: var(--pl-ink-soft);
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-.export-pitch-card__badge {
-  border: 1.5px solid var(--pl-cyan);
-  color: var(--pl-cyan);
-  border-radius: var(--radius-pill);
-  padding: 8px 18px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13.5px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.export-pitch {
-  position: relative;
-  height: 420px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #123324, #0E2A1D);
-}
-
-.export-pitch__svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.export-pitch__player {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(15,10,20,0.85);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: var(--radius-pill);
-  padding: 10px 16px;
-  white-space: nowrap;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
-}
-
-.export-pitch__name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--pl-white);
-}
-.export-pitch__sep { color: var(--pl-ink-dim); }
-.export-pitch__pos { font-size: 13px; color: var(--pl-ink-soft); font-weight: 600; }
-
-.export-pitch__player.is-gk { border-color: var(--pl-pink); padding-left: 6px; }
-.export-pitch__player.is-gk .export-pitch__name { color: var(--pl-pink); }
-
-.export-pitch__gk-badge {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: var(--pl-bg);
-  border: 2px solid var(--pl-cyan);
-  color: var(--pl-white);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 10.5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.export-match__score {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--pl-border);
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 18px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--pl-white);
-}
-.export-match__score b {
-  font-size: 30px;
-  font-weight: 800;
-  color: var(--pl-green);
-}
-
-.export-match__scorers {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  font-size: 13px;
-  color: var(--pl-ink-soft);
-}
-.export-match__scorers em {
-  font-style: normal;
-  font-weight: 700;
-  color: var(--pl-cyan);
-}
-
-/* ---------------- Footer ---------------- */
-
-.app-footer {
-  text-align: center;
-  padding: 18px 20px 30px;
-  color: var(--pl-ink-dim);
-  font-size: 12px;
-}
-
-/* ---------------- Responsive ---------------- */
-
-@media (max-width: 600px) {
-  .match-form__teams { grid-template-columns: 1fr; }
-  .match-form__vs { text-align: center; padding: 0; }
-  .scorers { grid-template-columns: 1fr; }
-  .lineup-form__controls { grid-template-columns: 1fr; }
-  .lineup-slot { grid-template-columns: 22px 1fr; }
-  .lineup-slot__position { grid-column: 1 / -1; }
-  .panel { padding: 20px 16px 26px; }
-  .hero h1 { font-size: 27px; }
-
-  .pitch { min-height: 640px; padding: 14px 8px; }
-  .pitch__center-circle { width: 90px; height: 90px; }
-  .pitch__player { flex-basis: 72px; padding: 5px 4px; }
-  .pitch__player-name { font-size: 10px; }
-  .pitch__player-pos { font-size: 8.5px; }
-}
-
+/**
+ * script.js
+ * -----------------------------------------------------------------------
+ * Logika UI aplikasi liga sepakbola berbasis GitHub.
+ * Data dibaca & disimpan lewat objek DB (lihat database.js) yang
+ * tersambung ke GitHub + Worker. Membaca = publik, menulis = wajib login
+ * admin. Semua operasi tulis bersifat async (menunggu respons Worker).
+ * -----------------------------------------------------------------------
+ */
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // ---------------- Elemen umum & auth ----------------
+  const authStatus = document.getElementById('auth-status');
+  const btnShowLogin = document.getElementById('btn-show-login');
+  const btnLogout = document.getElementById('btn-logout');
+  const loginModal = document.getElementById('login-modal');
+  const formLogin = document.getElementById('form-login');
+  const loginUsername = document.getElementById('login-username');
+  const loginPassword = document.getElementById('login-password');
+  const loginError = document.getElementById('login-error');
+  const btnCancelLogin = document.getElementById('btn-cancel-login');
+
+  const tabButtons = document.querySelectorAll('.tabs__btn');
+  const panels = document.querySelectorAll('.panel');
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  function switchTab(tab) {
+    tabButtons.forEach((b) => b.classList.toggle('is-active', b.dataset.tab === tab));
+    panels.forEach((p) => p.classList.toggle('is-active', p.id === 'tab-' + tab));
+    if (tab === 'klasemen') renderKlasemen();
+    if (tab === 'topskor') renderTopSkor();
+    if (tab === 'pertandingan') renderFormPertandingan();
+    if (tab === 'startingxi') renderFormStartingXI();
+  }
+
+  // ---------------- Auth UI ----------------
+
+  btnShowLogin.addEventListener('click', () => {
+    loginError.hidden = true;
+    formLogin.reset();
+    loginModal.hidden = false;
+    loginUsername.focus();
+  });
+
+  btnCancelLogin.addEventListener('click', () => {
+    loginModal.hidden = true;
+  });
+
+  loginModal.addEventListener('click', (e) => {
+    if (e.target === loginModal) loginModal.hidden = true;
+  });
+
+  formLogin.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.hidden = true;
+    const submitBtn = formLogin.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await DB.login(loginUsername.value.trim(), loginPassword.value);
+      loginModal.hidden = true;
+      applyAuthUI();
+      refreshCurrentTabAdminAreas();
+    } catch (err) {
+      loginError.textContent = err.message || 'Login gagal.';
+      loginError.hidden = false;
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  btnLogout.addEventListener('click', () => {
+    DB.logout();
+    applyAuthUI();
+    refreshCurrentTabAdminAreas();
+  });
+
+  function applyAuthUI() {
+    const loggedIn = DB.isLoggedIn();
+    btnShowLogin.hidden = loggedIn;
+    btnLogout.hidden = !loggedIn;
+    authStatus.textContent = loggedIn
+      ? 'Login sebagai admin'
+      : (DB.isUsingFallback() ? 'Mode publik (data belum tersedia)' : 'Mode publik (baca saja)');
+
+    document.getElementById('tim-admin-area').style.display = loggedIn ? '' : 'none';
+    document.getElementById('tim-readonly-note').hidden = loggedIn;
+
+    document.getElementById('pertandingan-admin-area').style.display = loggedIn ? '' : 'none';
+    document.getElementById('pertandingan-readonly-note').hidden = loggedIn;
+
+    document.getElementById('startingxi-admin-area').style.display = loggedIn ? '' : 'none';
+    document.getElementById('startingxi-readonly-note').hidden = loggedIn;
+  }
+
+  function refreshCurrentTabAdminAreas() {
+    renderDaftarTimTersimpan();
+    renderTimAwalVsKelola();
+    renderFormPertandingan();
+    renderFormStartingXI();
+    renderKlasemen();
+    renderTopSkor();
+  }
+
+  function handleWriteError(err) {
+    console.error(err);
+    showToast(err.message || 'Terjadi kesalahan saat menyimpan data.', 'error');
+    if (err.code === 'AUTH_EXPIRED') {
+      applyAuthUI();
+      refreshCurrentTabAdminAreas();
+    }
+  }
+
+  // ---------------- TAB 1: Setup Tim ----------------
+  const formJumlahTim = document.getElementById('form-jumlah-tim');
+  const slotNamaTim = document.getElementById('slot-nama-tim');
+  const btnSimpanTim = document.getElementById('btn-simpan-tim');
+  const btnResetSemua = document.getElementById('btn-reset-semua');
+  const daftarTimTersimpan = document.getElementById('daftar-tim-tersimpan');
+  const timAwalArea = document.getElementById('tim-awal-area');
+  const tambahTimArea = document.getElementById('tambah-tim-area');
+  const formTambahTim = document.getElementById('form-tambah-tim');
+  const inputNamaTimBaru = document.getElementById('input-nama-tim-baru');
+
+  // Kalau belum ada tim sama sekali: tampilkan form "buat slot awal" (cara
+  // cepat isi banyak tim sekaligus). Kalau sudah ada minimal 1 tim:
+  // sembunyikan form itu, tampilkan form "+ Tambah Tim" satuan supaya
+  // tim baru bisa ditambah tanpa menghapus pertandingan/starting XI yang
+  // sudah ada.
+  function renderTimAwalVsKelola() {
+    const adaTim = DB.getTeams().length > 0;
+    timAwalArea.hidden = adaTim;
+    tambahTimArea.hidden = !adaTim;
+  }
+
+  formJumlahTim.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const jumlah = parseInt(document.getElementById('input-jumlah-tim').value, 10);
+    if (!jumlah || jumlah < 2) return;
+
+    slotNamaTim.innerHTML = '';
+    for (let i = 1; i <= jumlah; i++) {
+      const wrap = document.createElement('div');
+      wrap.className = 'team-slot';
+      wrap.innerHTML = `
+        <label for="nama-tim-${i}">Tim ${i}</label>
+        <input type="text" id="nama-tim-${i}" placeholder="Nama tim ${i}" required>
+      `;
+      slotNamaTim.appendChild(wrap);
+    }
+    btnSimpanTim.disabled = false;
+  });
+
+  btnSimpanTim.addEventListener('click', async () => {
+    const inputs = slotNamaTim.querySelectorAll('input[type="text"]');
+    const names = Array.from(inputs).map((inp) => inp.value.trim());
+
+    if (names.length === 0 || names.some((n) => !n)) {
+      showToast('Mohon isi semua nama tim.', 'error');
+      return;
+    }
+    const hasDuplicate = new Set(names.map((n) => n.toLowerCase())).size !== names.length;
+    if (hasDuplicate) {
+      showToast('Nama tim tidak boleh sama antara satu dengan yang lain.', 'error');
+      return;
+    }
+
+    btnSimpanTim.disabled = true;
+    btnSimpanTim.textContent = 'Menyimpan ke GitHub...';
+    try {
+      await DB.setTeams(names);
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderFormStartingXI();
+      renderTimAwalVsKelola();
+      showToast('Tim berhasil disimpan. Kompetisi siap dimulai!');
+      switchTab('pertandingan');
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      btnSimpanTim.disabled = false;
+      btnSimpanTim.textContent = 'Simpan Tim & Mulai Kompetisi';
+    }
+  });
+
+  formTambahTim.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = inputNamaTimBaru.value.trim();
+    if (!name) return;
+
+    const existing = DB.getTeams();
+    if (existing.some((t) => t.name.toLowerCase() === name.toLowerCase())) {
+      showToast('Nama tim itu sudah ada.', 'error');
+      return;
+    }
+
+    const submitBtn = formTambahTim.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await DB.addTeam(name);
+      inputNamaTimBaru.value = '';
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderFormStartingXI();
+      showToast(`Tim "${name}" berhasil ditambahkan.`);
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  btnResetSemua.addEventListener('click', async () => {
+    if (!confirm('Yakin ingin menghapus SEMUA data (tim, pertandingan & starting XI) di GitHub? Tindakan ini tidak bisa dibatalkan.')) return;
+    try {
+      await DB.resetAll();
+      slotNamaTim.innerHTML = '';
+      btnSimpanTim.disabled = true;
+      document.getElementById('input-jumlah-tim').value = '';
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderRiwayatPertandingan();
+      renderFormStartingXI();
+      renderTimAwalVsKelola();
+      showToast('Semua data berhasil dihapus.');
+    } catch (err) {
+      handleWriteError(err);
+    }
+  });
+
+  function renderDaftarTimTersimpan() {
+    const teams = DB.getTeams();
+    const loggedIn = DB.isLoggedIn();
+    if (teams.length === 0) {
+      daftarTimTersimpan.innerHTML = '';
+      return;
+    }
+    daftarTimTersimpan.innerHTML = `
+      <h3>Tim Terdaftar (${teams.length})</h3>
+      <div class="saved-teams__list">
+        ${teams
+          .map(
+            (t) => `
+          <span class="chip chip--editable" data-team-id="${t.id}">
+            <span class="chip__label chip__label--clickable" data-show-lineup="${t.id}" title="Klik untuk lihat line up">${escapeHtml(t.name)}</span>
+            ${loggedIn ? `
+            <button type="button" class="chip__btn" data-edit-team="${t.id}" title="Ubah nama">&#9998;</button>
+            <button type="button" class="chip__btn chip__btn--danger" data-delete-team="${t.id}" title="Hapus tim">&times;</button>` : ''}
+          </span>`
+          )
+          .join('')}
+      </div>
+    `;
+
+    daftarTimTersimpan.querySelectorAll('[data-edit-team]').forEach((btn) => {
+      btn.addEventListener('click', () => startEditTeam(btn.dataset.editTeam));
+    });
+    daftarTimTersimpan.querySelectorAll('[data-delete-team]').forEach((btn) => {
+      btn.addEventListener('click', () => handleDeleteTeam(btn.dataset.deleteTeam));
+    });
+    daftarTimTersimpan.querySelectorAll('[data-show-lineup]').forEach((el) => {
+      el.addEventListener('click', () => toggleTeamLineupPreview(el.dataset.showLineup));
+    });
+  }
+
+  let previewedTeamId = null;
+  function toggleTeamLineupPreview(teamId) {
+    const previewBox = document.getElementById('tim-lineup-preview');
+    if (previewedTeamId === teamId) {
+      previewedTeamId = null;
+      previewBox.innerHTML = '';
+      return;
+    }
+    previewedTeamId = teamId;
+
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    const lu = DB.getAllLineups()[teamId];
+
+    if (!team) { previewBox.innerHTML = ''; return; }
+
+    if (!lu) {
+      previewBox.innerHTML = `
+        <div class="lineup-card">
+          <div class="lineup-card__head"><h4>${escapeHtml(team.name)}</h4></div>
+          <p class="empty-note">Tim ini belum punya Line Up tersimpan.</p>
+        </div>`;
+      return;
+    }
+
+    previewBox.innerHTML = buildLineupCardHtml(team, lu);
+    wireLineupCardShareButtons(previewBox);
+  }
+
+
+  function startEditTeam(teamId) {
+    const chip = daftarTimTersimpan.querySelector(`.chip[data-team-id="${teamId}"]`);
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    if (!chip || !team) return;
+
+    chip.innerHTML = `
+      <input type="text" class="chip__edit-input" value="${escapeHtml(team.name)}">
+      <button type="button" class="chip__btn" data-save-team="${teamId}" title="Simpan">&#10003;</button>
+      <button type="button" class="chip__btn" data-cancel-edit-team title="Batal">&times;</button>
+    `;
+    const input = chip.querySelector('.chip__edit-input');
+    input.focus();
+    input.select();
+
+    const save = async () => {
+      const newName = input.value.trim();
+      if (!newName) return;
+      try {
+        await DB.updateTeamName(teamId, newName);
+        renderDaftarTimTersimpan();
+        renderFormPertandingan();
+        renderFormStartingXI();
+        renderRiwayatPertandingan();
+        showToast('Nama tim berhasil diperbarui.');
+      } catch (err) {
+        handleWriteError(err);
+      }
+    };
+
+    chip.querySelector('[data-save-team]').addEventListener('click', save);
+    chip.querySelector('[data-cancel-edit-team]').addEventListener('click', () => renderDaftarTimTersimpan());
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); save(); }
+      if (e.key === 'Escape') renderDaftarTimTersimpan();
+    });
+  }
+
+  async function handleDeleteTeam(teamId) {
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    if (!team) return;
+    if (!confirm(`Hapus tim "${team.name}"? Pertandingan yang melibatkan tim ini akan tetap tersimpan (ditandai "tim dihapus"), tapi starting XI tim ini akan ikut terhapus.`)) return;
+    try {
+      await DB.deleteTeam(teamId);
+      renderDaftarTimTersimpan();
+      renderFormPertandingan();
+      renderFormStartingXI();
+      renderRiwayatPertandingan();
+      renderTimAwalVsKelola();
+      showToast(`Tim "${team.name}" berhasil dihapus.`);
+    } catch (err) {
+      handleWriteError(err);
+    }
+  }
+
+  // ---------------- TAB 2: Input Pertandingan ----------------
+  const formPertandingan = document.getElementById('form-pertandingan');
+  const selectTimA = document.getElementById('select-tim-a');
+  const selectTimB = document.getElementById('select-tim-b');
+  const skorA = document.getElementById('skor-a');
+  const skorB = document.getElementById('skor-b');
+  const labelTimA = document.getElementById('label-tim-a');
+  const labelTimB = document.getElementById('label-tim-b');
+  const scorerListA = document.getElementById('scorer-list-a');
+  const scorerListB = document.getElementById('scorer-list-b');
+  const counterGolA = document.getElementById('counter-gol-a');
+  const counterGolB = document.getElementById('counter-gol-b');
+  const pertandinganWarning = document.getElementById('pertandingan-warning');
+  const scorerWarning = document.getElementById('scorer-warning');
+  const btnSubmitPertandingan = document.getElementById('btn-submit-pertandingan');
+  const btnBatalEditPertandingan = document.getElementById('btn-batal-edit-pertandingan');
+
+  let editingMatchId = null; // null = mode "tambah baru", isi = sedang mengedit match ini
+
+  document.querySelectorAll('[data-add-scorer]').forEach((btn) => {
+    btn.addEventListener('click', () => addScorerRow(btn.dataset.addScorer));
+  });
+
+  function renderFormPertandingan() {
+    const teams = DB.getTeams();
+    const cukupTim = teams.length >= 2;
+    pertandinganWarning.hidden = cukupTim;
+    document.getElementById('pertandingan-admin-area').hidden = !cukupTim;
+
+    if (!cukupTim) {
+      renderRiwayatPertandingan();
+      return;
+    }
+
+    const optionsHtml = teams.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+    selectTimA.innerHTML = optionsHtml;
+    selectTimB.innerHTML = optionsHtml;
+    if (teams.length > 1) selectTimB.selectedIndex = 1;
+
+    updateScorerLabels();
+    renderRiwayatPertandingan();
+  }
+
+  function updateScorerLabels() {
+    const namaA = selectTimA.options[selectTimA.selectedIndex]?.text || 'Tim Tuan Rumah';
+    const namaB = selectTimB.options[selectTimB.selectedIndex]?.text || 'Tim Tamu';
+    labelTimA.textContent = namaA;
+    labelTimB.textContent = namaB;
+  }
+
+  selectTimA.addEventListener('change', updateScorerLabels);
+  selectTimB.addEventListener('change', updateScorerLabels);
+
+  // Counter real-time: tampilkan "X dari Y gol terisi" saat mengetik,
+  // supaya tidak perlu klik submit dulu baru tahu jumlahnya belum cocok.
+  function updateGoalCounters() {
+    const totalA = readScorerRows(scorerListA).reduce((sum, s) => sum + s.goals, 0);
+    const totalB = readScorerRows(scorerListB).reduce((sum, s) => sum + s.goals, 0);
+    const targetA = parseInt(skorA.value, 10);
+    const targetB = parseInt(skorB.value, 10);
+
+    function setCounter(el, total, target) {
+      if (isNaN(target)) {
+        el.textContent = `(${total} gol dicatat)`;
+        el.classList.remove('scorer-counter--ok', 'scorer-counter--off');
+        return;
+      }
+      el.textContent = `(${total} dari ${target} gol)`;
+      el.classList.toggle('scorer-counter--ok', total === target);
+      el.classList.toggle('scorer-counter--off', total !== target);
+    }
+    setCounter(counterGolA, totalA, targetA);
+    setCounter(counterGolB, totalB, targetB);
+  }
+
+  skorA.addEventListener('input', updateGoalCounters);
+  skorB.addEventListener('input', updateGoalCounters);
+  scorerListA.addEventListener('input', updateGoalCounters);
+  scorerListB.addEventListener('input', updateGoalCounters);
+
+  function addScorerRow(side, playerVal = '', goalsVal = 1) {
+    const container = side === 'a' ? scorerListA : scorerListB;
+    const row = document.createElement('div');
+    row.className = 'scorer-row';
+    row.innerHTML = `
+      <input type="text" placeholder="Nama pemain" class="scorer-player" value="${escapeHtml(playerVal)}">
+      <input type="number" min="1" value="${goalsVal}" class="scorer-goals">
+      <button type="button" class="scorer-row__remove" title="Hapus">&times;</button>
+    `;
+    row.querySelector('.scorer-row__remove').addEventListener('click', () => {
+      row.remove();
+      updateGoalCounters();
+    });
+    container.appendChild(row);
+    updateGoalCounters();
+  }
+
+  function resetFormPertandinganKeModeTambah() {
+    editingMatchId = null;
+    formPertandingan.reset();
+    scorerListA.innerHTML = '';
+    scorerListB.innerHTML = '';
+    btnSubmitPertandingan.textContent = 'Simpan Hasil Pertandingan';
+    btnBatalEditPertandingan.hidden = true;
+    updateScorerLabels();
+    updateGoalCounters();
+  }
+
+  btnBatalEditPertandingan.addEventListener('click', resetFormPertandinganKeModeTambah);
+
+  function startEditMatch(matchId) {
+    const match = DB.getMatches().find((m) => m.id === matchId);
+    if (!match) return;
+
+    editingMatchId = matchId;
+    selectTimA.value = match.teamAId;
+    selectTimB.value = match.teamBId;
+    skorA.value = match.scoreA;
+    skorB.value = match.scoreB;
+    scorerListA.innerHTML = '';
+    scorerListB.innerHTML = '';
+    match.scorersA.forEach((s) => addScorerRow('a', s.player, s.goals));
+    match.scorersB.forEach((s) => addScorerRow('b', s.player, s.goals));
+
+    updateScorerLabels();
+    updateGoalCounters();
+    btnSubmitPertandingan.textContent = 'Perbarui Pertandingan';
+    btnBatalEditPertandingan.hidden = false;
+    formPertandingan.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  formPertandingan.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const teamAId = selectTimA.value;
+    const teamBId = selectTimB.value;
+    if (teamAId === teamBId) {
+      showToast('Tim tuan rumah dan tim tamu tidak boleh sama.', 'error');
+      return;
+    }
+
+    const nA = parseInt(skorA.value, 10);
+    const nB = parseInt(skorB.value, 10);
+
+    const scorersA = readScorerRows(scorerListA);
+    const scorersB = readScorerRows(scorerListB);
+
+    const totalGolA = scorersA.reduce((sum, s) => sum + s.goals, 0);
+    const totalGolB = scorersB.reduce((sum, s) => sum + s.goals, 0);
+
+    if (totalGolA !== nA || totalGolB !== nB) {
+      scorerWarning.hidden = false;
+      return;
+    }
+    scorerWarning.hidden = true;
+
+    btnSubmitPertandingan.disabled = true;
+    const originalLabel = btnSubmitPertandingan.textContent;
+    btnSubmitPertandingan.textContent = 'Menyimpan ke GitHub...';
+    try {
+      if (editingMatchId) {
+        await DB.updateMatch(editingMatchId, { teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        showToast('Pertandingan berhasil diperbarui.');
+      } else {
+        await DB.addMatch({ teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        showToast('Pertandingan berhasil disimpan.');
+      }
+      resetFormPertandinganKeModeTambah();
+      renderRiwayatPertandingan();
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      btnSubmitPertandingan.disabled = false;
+      btnSubmitPertandingan.textContent = editingMatchId ? 'Perbarui Pertandingan' : originalLabel;
+    }
+  });
+
+  function readScorerRows(container) {
+    const rows = container.querySelectorAll('.scorer-row');
+    const result = [];
+    rows.forEach((row) => {
+      const player = row.querySelector('.scorer-player').value.trim();
+      const goals = parseInt(row.querySelector('.scorer-goals').value, 10) || 0;
+      if (player && goals > 0) result.push({ player, goals });
+    });
+    return result;
+  }
+
+  function renderRiwayatPertandingan() {
+    const box = document.getElementById('riwayat-pertandingan');
+    const matches = DB.getMatches();
+    const teams = DB.getTeams();
+    const teamName = (id) => teams.find((t) => t.id === id)?.name || '(tim dihapus)';
+    const loggedIn = DB.isLoggedIn();
+
+    if (matches.length === 0) {
+      box.innerHTML = `<p class="empty-note">Belum ada pertandingan yang dicatat.</p>`;
+      return;
+    }
+
+    box.innerHTML = matches
+      .slice()
+      .reverse()
+      .map((m) => {
+        const scorerText = (list) => list.map((s) => `${escapeHtml(s.player)} (${s.goals})`).join(', ') || '&mdash;';
+        return `
+        <div class="match-card">
+          <div class="match-card__score">
+            ${escapeHtml(teamName(m.teamAId))} <b>${m.scoreA} &ndash; ${m.scoreB}</b> ${escapeHtml(teamName(m.teamBId))}
+          </div>
+          <div class="match-card__actions">
+            <button class="match-card__share" data-id="${m.id}" title="Bagikan sebagai gambar">&#128247;</button>
+            ${loggedIn ? `
+            <button class="match-card__edit" data-id="${m.id}">Edit</button>
+            <button class="match-card__remove" data-id="${m.id}">Hapus</button>` : ''}
+          </div>
+          <div class="match-card__scorers">
+            Gol ${escapeHtml(teamName(m.teamAId))}: ${scorerText(m.scorersA)} &nbsp;|&nbsp;
+            Gol ${escapeHtml(teamName(m.teamBId))}: ${scorerText(m.scorersB)}
+          </div>
+        </div>`;
+      })
+      .join('');
+
+    box.querySelectorAll('.match-card__share').forEach((btn) => {
+      btn.addEventListener('click', () => shareMatch(btn.dataset.id));
+    });
+
+    box.querySelectorAll('.match-card__edit').forEach((btn) => {
+      btn.addEventListener('click', () => startEditMatch(btn.dataset.id));
+    });
+
+    box.querySelectorAll('.match-card__remove').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Hapus pertandingan ini dari riwayat?')) return;
+        try {
+          await DB.deleteMatch(btn.dataset.id);
+          if (editingMatchId === btn.dataset.id) resetFormPertandinganKeModeTambah();
+          renderRiwayatPertandingan();
+          showToast('Pertandingan berhasil dihapus.');
+        } catch (err) {
+          handleWriteError(err);
+        }
+      });
+    });
+  }
+
+  // ---------------- TAB 3: Klasemen ----------------
+  function hitungKlasemen() {
+    const teams = DB.getTeams();
+    const matches = DB.getMatches();
+
+    const table = {};
+    teams.forEach((t) => {
+      table[t.id] = {
+        id: t.id,
+        name: t.name,
+        played: 0, win: 0, draw: 0, lose: 0,
+        goalsFor: 0, goalsAgainst: 0, points: 0
+      };
+    });
+
+    matches.forEach((m) => {
+      const a = table[m.teamAId];
+      const b = table[m.teamBId];
+      if (!a || !b) return; // tim mungkin sudah dihapus
+
+      a.played++; b.played++;
+      a.goalsFor += m.scoreA; a.goalsAgainst += m.scoreB;
+      b.goalsFor += m.scoreB; b.goalsAgainst += m.scoreA;
+
+      if (m.scoreA > m.scoreB) {
+        a.win++; a.points += 3;
+        b.lose++;
+      } else if (m.scoreA < m.scoreB) {
+        b.win++; b.points += 3;
+        a.lose++;
+      } else {
+        a.draw++; b.draw++;
+        a.points += 1; b.points += 1;
+      }
+    });
+
+    return Object.values(table).sort((x, y) => {
+      if (y.points !== x.points) return y.points - x.points;
+      const gdX = x.goalsFor - x.goalsAgainst;
+      const gdY = y.goalsFor - y.goalsAgainst;
+      if (gdY !== gdX) return gdY - gdX;
+      if (y.goalsFor !== x.goalsFor) return y.goalsFor - x.goalsFor;
+      return x.name.localeCompare(y.name);
+    });
+  }
+
+  function renderKlasemen() {
+    const body = document.getElementById('tabel-klasemen-body');
+    const standings = hitungKlasemen();
+
+    if (standings.length === 0) {
+      body.innerHTML = `<tr><td colspan="10" class="empty-note">Belum ada tim yang terdaftar.</td></tr>`;
+      return;
+    }
+
+    body.innerHTML = standings
+      .map((r, i) => {
+        const gd = r.goalsFor - r.goalsAgainst;
+        return `
+        <tr>
+          <td class="col-rank">${i + 1}</td>
+          <td class="col-team">${escapeHtml(r.name)}</td>
+          <td>${r.played}</td>
+          <td>${r.win}</td>
+          <td>${r.draw}</td>
+          <td>${r.lose}</td>
+          <td>${r.goalsFor}</td>
+          <td>${r.goalsAgainst}</td>
+          <td>${gd > 0 ? '+' : ''}${gd}</td>
+          <td class="col-pts">${r.points}</td>
+        </tr>`;
+      })
+      .join('');
+  }
+
+  // ---------------- TAB 4: Top Skor ----------------
+  function hitungTopSkor() {
+    const matches = DB.getMatches();
+    const teams = DB.getTeams();
+    const teamName = (id) => teams.find((t) => t.id === id)?.name || '(tim dihapus)';
+
+    const totals = {}; // key: player|teamId
+
+    matches.forEach((m) => {
+      m.scorersA.forEach((s) => addGoals(s, m.teamAId));
+      m.scorersB.forEach((s) => addGoals(s, m.teamBId));
+    });
+
+    function addGoals(s, teamId) {
+      const key = s.player.toLowerCase() + '|' + teamId;
+      if (!totals[key]) {
+        totals[key] = { player: s.player, team: teamName(teamId), goals: 0 };
+      }
+      totals[key].goals += s.goals;
+    }
+
+    return Object.values(totals).sort((a, b) => b.goals - a.goals || a.player.localeCompare(b.player));
+  }
+
+  function renderTopSkor() {
+    const box = document.getElementById('daftar-topskor');
+    const scorers = hitungTopSkor();
+
+    if (scorers.length === 0) {
+      box.innerHTML = `<p class="empty-note">Belum ada gol yang tercatat.</p>`;
+      return;
+    }
+
+    box.innerHTML = scorers
+      .map((s, i) => `
+        <div class="topscorer-row">
+          <div class="topscorer-row__rank">${i + 1}</div>
+          <div>
+            <div class="topscorer-row__player">${escapeHtml(s.player)}</div>
+            <div class="topscorer-row__team">${escapeHtml(s.team)}</div>
+          </div>
+          <div></div>
+          <div class="topscorer-row__goals">${s.goals} gol</div>
+        </div>
+      `)
+      .join('');
+  }
+
+  // ---------------- TAB 5: Line Up ----------------
+  const FORMAT_INFO = {
+    futsal:  { label: 'Futsal', total: 5 },
+    mini:    { label: 'Mini Soccer', total: 8 },
+    standar: { label: 'Sepak Bola Standar', total: 11 }
+  };
+
+  // Katalog posisi per format. `line` = jalur taktis dari kiper (0) ke lini depan (angka terbesar),
+  // dipakai untuk menyusun kolom di tampilan lapangan & menghitung string formasi otomatis.
+  const POSITION_CATALOG = {
+    futsal: [
+      { code: 'GK', label: 'Kiper', short: 'GK', line: 0 },
+      { code: 'FIXO', label: 'Fixo (Bek)', short: 'FIXO', line: 1 },
+      { code: 'ALA_KANAN', label: 'Ala Kanan', short: 'RW', line: 2 },
+      { code: 'ALA_KIRI', label: 'Ala Kiri', short: 'LW', line: 2 },
+      { code: 'PIVOT', label: 'Pivot', short: 'PIV', line: 3 }
+    ],
+    mini: [
+      { code: 'GK', label: 'Kiper', line: 0 },
+      { code: 'CB', label: 'Bek Tengah', line: 1 },
+      { code: 'RB', label: 'Bek Kanan', line: 1 },
+      { code: 'LB', label: 'Bek Kiri', line: 1 },
+      { code: 'CM', label: 'Gelandang Tengah', line: 2 },
+      { code: 'RM', label: 'Gelandang Kanan', line: 2 },
+      { code: 'LM', label: 'Gelandang Kiri', line: 2 },
+      { code: 'CF', label: 'Penyerang', line: 3 }
+    ],
+    standar: [
+      { code: 'GK', label: 'Kiper', line: 0 },
+      { code: 'CB', label: 'Bek Tengah', line: 1 },
+      { code: 'RB', label: 'Bek Kanan', line: 1 },
+      { code: 'LB', label: 'Bek Kiri', line: 1 },
+      { code: 'DMF', label: 'Gelandang Bertahan', line: 2 },
+      { code: 'CMF', label: 'Gelandang Tengah', line: 3 },
+      { code: 'RMF', label: 'Gelandang Kanan', line: 3 },
+      { code: 'LMF', label: 'Gelandang Kiri', line: 3 },
+      { code: 'AMF', label: 'Gelandang Serang', line: 3 },
+      { code: 'RWF', label: 'Sayap Kanan', line: 4 },
+      { code: 'LWF', label: 'Sayap Kiri', line: 4 },
+      { code: 'CF', label: 'Penyerang Tengah', line: 4 },
+      { code: 'SS', label: 'Penyerang Bayangan', line: 4 }
+    ]
+  };
+
+  // Nama lengkap (Indonesia) — dipakai di dropdown pilihan & tooltip supaya
+  // tetap jelas maksudnya saat memilih/menyusun.
+  function posLabel(format, code) {
+    const found = POSITION_CATALOG[format]?.find((p) => p.code === code);
+    return found ? found.label : code;
+  }
+
+  // Kode singkat — dipakai di chip, kartu Line Up, dan gambar hasil share
+  // supaya tidak makan tempat (CB, CMF, DMF, LMF, CF, dst).
+  function posShort(format, code) {
+    const found = POSITION_CATALOG[format]?.find((p) => p.code === code);
+    return found ? (found.short || found.code) : code;
+  }
+
+  function posLine(format, code) {
+    const found = POSITION_CATALOG[format]?.find((p) => p.code === code);
+    return found ? found.line : 0;
+  }
+
+  function positionOptionsHtml(format, selectedCode) {
+    return POSITION_CATALOG[format]
+      .map((p) => `<option value="${p.code}" ${p.code === selectedCode ? 'selected' : ''}>${escapeHtml(p.label)} (${escapeHtml(p.short || p.code)})</option>`)
+      .join('');
+  }
+
+  const formStartingXI = document.getElementById('form-startingxi');
+  const selectLineupTim = document.getElementById('select-lineup-tim');
+  const selectFormat = document.getElementById('select-format');
+  const lineupSlots = document.getElementById('lineup-slots');
+  const startingxiWarning = document.getElementById('startingxi-warning');
+  const daftarLineupTersimpan = document.getElementById('daftar-lineup-tersimpan');
+  const pitchWarning = document.getElementById('pitch-warning');
+  const pitchControls = document.getElementById('pitch-controls');
+  const selectPitchA = document.getElementById('select-pitch-a');
+  const selectPitchB = document.getElementById('select-pitch-b');
+  const pitchPreviewWrap = document.getElementById('pitch-preview-wrap');
+
+  selectLineupTim.addEventListener('change', () => loadLineupIntoForm(selectLineupTim.value));
+  selectFormat.addEventListener('change', () => buildLineupSlots(selectFormat.value));
+
+  function loadLineupIntoForm(teamId) {
+    const existing = DB.getLineup(teamId);
+    if (existing) {
+      selectFormat.value = existing.format;
+      buildLineupSlots(existing.format, existing.players);
+    } else {
+      buildLineupSlots(selectFormat.value);
+    }
+  }
+
+  function renderFormStartingXI() {
+    const teams = DB.getTeams();
+    const adaTim = teams.length >= 1;
+    startingxiWarning.hidden = adaTim;
+    document.getElementById('startingxi-admin-area').hidden = !adaTim;
+
+    if (!adaTim) {
+      daftarLineupTersimpan.innerHTML = '';
+      pitchControls.style.display = 'none';
+      pitchWarning.hidden = false;
+      return;
+    }
+
+    selectLineupTim.innerHTML = teams.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+    loadLineupIntoForm(selectLineupTim.value);
+    renderDaftarLineupTersimpan();
+    renderPitchTeamSelectors();
+  }
+
+  function buildLineupSlots(format, existingPlayers = []) {
+    const total = FORMAT_INFO[format].total;
+    const catalog = POSITION_CATALOG[format];
+    const defaultOutfieldCode = catalog.find((p) => p.code !== 'GK').code;
+    lineupSlots.innerHTML = '';
+
+    for (let i = 0; i < total; i++) {
+      const existing = existingPlayers[i];
+      const existingName = existing?.name || '';
+      const selectedCode = existing?.positionCode || (i === 0 ? 'GK' : defaultOutfieldCode);
+
+      const row = document.createElement('div');
+      row.className = 'lineup-slot';
+      row.innerHTML = `
+        <span class="lineup-slot__num">${i + 1}</span>
+        <input type="text" class="lineup-slot__input" placeholder="Nama pemain ${i + 1}" value="${escapeHtml(existingName)}">
+        <select class="lineup-slot__position">${positionOptionsHtml(format, selectedCode)}</select>
+      `;
+      lineupSlots.appendChild(row);
+    }
+
+    updateGkBadges();
+    lineupSlots.querySelectorAll('.lineup-slot__position').forEach((sel) => {
+      sel.addEventListener('change', updateGkBadges);
+    });
+  }
+
+  function updateGkBadges() {
+    lineupSlots.querySelectorAll('.lineup-slot').forEach((row) => {
+      const isGK = row.querySelector('.lineup-slot__position').value === 'GK';
+      row.querySelector('.lineup-slot__num').classList.toggle('is-gk', isGK);
+    });
+  }
+
+  formStartingXI.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const teamId = selectLineupTim.value;
+    const format = selectFormat.value;
+    const rows = lineupSlots.querySelectorAll('.lineup-slot');
+
+    const players = [];
+    rows.forEach((row, i) => {
+      const name = row.querySelector('.lineup-slot__input').value.trim();
+      const positionCode = row.querySelector('.lineup-slot__position').value;
+      if (name) players.push({ id: 'p' + i, name, positionCode });
+    });
+
+    if (players.length === 0) {
+      showToast('Isi minimal satu nama pemain.', 'error');
+      return;
+    }
+    const jumlahGK = players.filter((p) => p.positionCode === 'GK').length;
+    if (jumlahGK === 0) {
+      if (!confirm('Belum ada pemain dengan posisi Kiper. Tetap simpan?')) return;
+    } else if (jumlahGK > 1) {
+      if (!confirm('Ada lebih dari satu pemain berposisi Kiper. Tetap simpan?')) return;
+    }
+
+    const submitBtn = formStartingXI.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Menyimpan ke GitHub...';
+    try {
+      await DB.saveLineup(teamId, format, players);
+      renderDaftarLineupTersimpan();
+      renderPitchTeamSelectors();
+      showToast('Line Up berhasil disimpan.');
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Simpan Line Up';
+    }
+  });
+
+  function buildLineupCardHtml(team, lu, showActions = false, withShareButton = true) {
+    const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
+    return `
+      <div class="lineup-card">
+        <div class="lineup-card__head">
+          <h4>${escapeHtml(team.name)}</h4>
+          <span class="lineup-card__format">${formatLabel} &middot; ${formationString(lu.format, lu.players)}</span>
+          <div class="lineup-card__actions">
+            ${withShareButton ? `<button type="button" class="btn btn--ghost btn--small" data-share-lineup="${team.id}" title="Bagikan sebagai gambar">&#128247;</button>` : ''}
+            ${showActions ? `
+            <button type="button" class="btn btn--ghost btn--small" data-edit-lineup="${team.id}">Edit</button>
+            <button type="button" class="btn btn--danger btn--small" data-delete-lineup="${team.id}">Hapus</button>` : ''}
+          </div>
+        </div>
+        <div class="lineup-card__players">
+          ${lu.players
+            .map((p) => `<span class="lineup-chip ${p.positionCode === 'GK' ? 'is-gk' : ''}" title="${escapeHtml(posLabel(lu.format, p.positionCode))}">${escapeHtml(p.name)} <em>${escapeHtml(posShort(lu.format, p.positionCode))}</em></span>`)
+            .join('')}
+        </div>
+      </div>`;
+  }
+
+  function wireLineupCardShareButtons(container) {
+    container.querySelectorAll('[data-share-lineup]').forEach((btn) => {
+      btn.addEventListener('click', () => shareLineup(btn.dataset.shareLineup));
+    });
+  }
+
+  function renderDaftarLineupTersimpan() {
+    const teams = DB.getTeams();
+    const lineups = DB.getAllLineups();
+    const teamsWithLineup = teams.filter((t) => lineups[t.id]);
+    const loggedIn = DB.isLoggedIn();
+
+    if (teamsWithLineup.length === 0) {
+      daftarLineupTersimpan.innerHTML = `<p class="empty-note">Belum ada line up yang tersimpan.</p>`;
+      return;
+    }
+
+    daftarLineupTersimpan.innerHTML = teamsWithLineup
+      .map((t) => buildLineupCardHtml(t, lineups[t.id], loggedIn))
+      .join('');
+
+    wireLineupCardShareButtons(daftarLineupTersimpan);
+
+    daftarLineupTersimpan.querySelectorAll('[data-edit-lineup]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        selectLineupTim.value = btn.dataset.editLineup;
+        loadLineupIntoForm(btn.dataset.editLineup);
+        formStartingXI.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+
+    daftarLineupTersimpan.querySelectorAll('[data-delete-lineup]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        if (!confirm('Hapus line up tim ini?')) return;
+        try {
+          await DB.deleteLineup(btn.dataset.deleteLineup);
+          renderDaftarLineupTersimpan();
+          renderPitchTeamSelectors();
+          pitchPreviewWrap.innerHTML = '';
+        } catch (err) {
+          handleWriteError(err);
+        }
+      });
+    });
+  }
+
+  function formationString(format, players) {
+    const catalog = POSITION_CATALOG[format];
+    const maxLine = Math.max(...catalog.map((p) => p.line));
+    const counts = [];
+    for (let line = 1; line <= maxLine; line++) {
+      counts.push(players.filter((p) => posLine(format, p.positionCode) === line).length);
+    }
+    return counts.join('-');
+  }
+
+  // ---------------- Preview lapangan (Head-to-Head) ----------------
+
+  function renderPitchTeamSelectors() {
+    const teams = DB.getTeams();
+    const lineups = DB.getAllLineups();
+    const teamsWithLineup = teams.filter((t) => lineups[t.id]);
+
+    if (teamsWithLineup.length < 2) {
+      pitchControls.style.display = 'none';
+      pitchWarning.hidden = false;
+      pitchPreviewWrap.innerHTML = '';
+      return;
+    }
+
+    pitchControls.style.display = '';
+    pitchWarning.hidden = true;
+
+    const optionsHtml = teamsWithLineup.map((t) => `<option value="${t.id}">${escapeHtml(t.name)}</option>`).join('');
+    const prevA = selectPitchA.value;
+    const prevB = selectPitchB.value;
+    selectPitchA.innerHTML = optionsHtml;
+    selectPitchB.innerHTML = optionsHtml;
+    // Pertahankan pilihan sebelumnya kalau tim itu masih ada; kalau tidak, pakai default.
+    if (teamsWithLineup.some((t) => t.id === prevA)) selectPitchA.value = prevA;
+    if (teamsWithLineup.some((t) => t.id === prevB)) {
+      selectPitchB.value = prevB;
+    } else if (teamsWithLineup.length > 1) {
+      selectPitchB.selectedIndex = 1;
+    }
+
+    renderPitchPreviewFromSelects();
+  }
+
+  function renderPitchPreviewFromSelects() {
+    const teamAId = selectPitchA.value;
+    const teamBId = selectPitchB.value;
+    if (!teamAId || !teamBId) return;
+    if (teamAId === teamBId) {
+      pitchPreviewWrap.innerHTML = `<p class="empty-note">Pilih dua tim yang berbeda untuk melihat perbandingan formasi.</p>`;
+      return;
+    }
+    renderPitchPreview(teamAId, teamBId);
+  }
+
+  selectPitchA.addEventListener('change', renderPitchPreviewFromSelects);
+  selectPitchB.addEventListener('change', renderPitchPreviewFromSelects);
+
+  function renderPitchPreview(teamAId, teamBId) {
+    const teams = DB.getTeams();
+    const lineups = DB.getAllLineups();
+    const teamA = teams.find((t) => t.id === teamAId);
+    const teamB = teams.find((t) => t.id === teamBId);
+    const luA = lineups[teamAId];
+    const luB = lineups[teamBId];
+
+    if (!teamA || !teamB || !luA || !luB) {
+      pitchPreviewWrap.innerHTML = `<p class="empty-note">Data starting XI tidak lengkap untuk salah satu tim.</p>`;
+      return;
+    }
+
+    function buildColumns(format, players, reversed) {
+      const catalog = POSITION_CATALOG[format];
+      const maxLine = Math.max(...catalog.map((p) => p.line));
+      const lineIndexes = [];
+      for (let line = 0; line <= maxLine; line++) lineIndexes.push(line);
+      const ordered = reversed ? lineIndexes.slice().reverse() : lineIndexes;
+
+      return ordered
+        .map((line) => {
+          const playersInLine = players.filter((p) => posLine(format, p.positionCode) === line);
+          if (playersInLine.length === 0) return '';
+          const cards = playersInLine
+            .map(
+              (p) => `
+              <div class="pitch__player">
+                <div class="pitch__player-name">${escapeHtml(p.name)}</div>
+                <div class="pitch__player-pos">${escapeHtml(posShort(format, p.positionCode))}</div>
+              </div>`
+            )
+            .join('');
+          return `<div class="pitch__col">${cards}</div>`;
+        })
+        .join('');
+    }
+
+    pitchPreviewWrap.innerHTML = `
+      <div class="pitch-heading">
+        <div class="pitch-heading__team">
+          <span class="pitch-heading__dot"></span>
+          <strong>${escapeHtml(teamA.name)}</strong> Formasi <b>${formationString(luA.format, luA.players)}</b>
+        </div>
+        <div class="pitch-heading__team pitch-heading__team--right">
+          <strong>${escapeHtml(teamB.name)}</strong> Formasi <b>${formationString(luB.format, luB.players)}</b>
+          <span class="pitch-heading__dot pitch-heading__dot--b"></span>
+        </div>
+      </div>
+      <div class="pitch">
+        <div class="pitch__center-line"></div>
+        <div class="pitch__center-circle"></div>
+        <div class="pitch__side">${buildColumns(luA.format, luA.players, false)}</div>
+        <div class="pitch__side">${buildColumns(luB.format, luB.players, true)}</div>
+      </div>
+    `;
+  }
+
+  // ---------------- Util ----------------
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function slugifyAppName() {
+    const name = (APP_CONFIG.APP_NAME || 'liga-kandang').toLowerCase();
+    return name.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'liga-kandang';
+  }
+
+  function applyAppBranding() {
+    const name = APP_CONFIG.APP_NAME || 'Liga Kandang';
+    document.getElementById('page-title').textContent = `${name} — Pencatat Kompetisi Sepakbola`;
+    document.getElementById('brand-name-text').textContent = name;
+    document.getElementById('hero-title').textContent = name.toLowerCase().startsWith('liga') ? name : `Liga ${name}`;
+  }
+
+  const toastContainer = document.getElementById('toast-container');
+  function showToast(message, type = 'success') {
+    const el = document.createElement('div');
+    el.className = 'toast toast--' + type;
+    el.textContent = message;
+    toastContainer.appendChild(el);
+    requestAnimationFrame(() => el.classList.add('is-visible'));
+    setTimeout(() => {
+      el.classList.remove('is-visible');
+      setTimeout(() => el.remove(), 250);
+    }, 3200);
+  }
+
+  // ---------------- Fitur Share / Unduh JPEG ----------------
+  // Membuat kartu HTML tersembunyi (di luar layar) berisi konten yang mau
+  // dibagikan, "memotretnya" jadi gambar pakai html2canvas, lalu:
+  // - Kalau perangkat mendukung Web Share API dengan file (kebanyakan HP),
+  //   langsung buka menu share bawaan (bisa langsung ke WhatsApp dsb.)
+  // - Kalau tidak, otomatis unduh sebagai file .jpg
+
+  function exportHeaderHtml(subtitle) {
+    return `
+      <div class="export-card__header">
+        <span class="export-card__dot"></span>
+        <span class="export-card__brand">${escapeHtml(APP_CONFIG.APP_NAME || 'Liga Kandang')}</span>
+      </div>
+      <div class="export-card__subtitle">${escapeHtml(subtitle)}</div>
+    `;
+  }
+
+  const EXPORT_FOOTER_HTML = `<div class="export-card__footer">Dibuat dengan ${escapeHtml(APP_CONFIG.APP_NAME || 'Liga Kandang')}</div>`;
+
+  async function exportHtmlToJpeg(innerHtml, filename, shareTitle, width = 640) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'export-card';
+    wrapper.style.position = 'fixed';
+    wrapper.style.left = '-9999px';
+    wrapper.style.top = '0';
+    wrapper.style.width = width + 'px';
+    wrapper.innerHTML = innerHtml;
+    document.body.appendChild(wrapper);
+
+    try {
+      const canvas = await html2canvas(wrapper, {
+        backgroundColor: '#0D0018',
+        scale: 2,
+        useCORS: true
+      });
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+      let shared = false;
+      if (navigator.canShare) {
+        try {
+          const blob = await (await fetch(dataUrl)).blob();
+          const file = new File([blob], filename, { type: 'image/jpeg' });
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: shareTitle });
+            shared = true;
+          }
+        } catch (shareErr) {
+          // Kalau user membatalkan share (AbortError), jangan lanjut fallback unduh.
+          if (shareErr && shareErr.name === 'AbortError') { shared = true; }
+        }
+      }
+
+      if (!shared) {
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showToast('Gambar berhasil diunduh.');
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('Gagal membuat gambar untuk dibagikan.', 'error');
+    } finally {
+      wrapper.remove();
+    }
+  }
+
+  async function shareStandings() {
+    const standings = hitungKlasemen();
+    if (standings.length === 0) {
+      showToast('Belum ada data klasemen untuk dibagikan.', 'error');
+      return;
+    }
+    const rows = standings
+      .map((r, i) => {
+        const gd = r.goalsFor - r.goalsAgainst;
+        return `
+        <tr>
+          <td class="col-rank">${i + 1}</td>
+          <td class="col-team">${escapeHtml(r.name)}</td>
+          <td>${r.played}</td>
+          <td>${r.win}</td>
+          <td>${r.draw}</td>
+          <td>${r.lose}</td>
+          <td>${r.goalsFor}</td>
+          <td>${r.goalsAgainst}</td>
+          <td>${gd > 0 ? '+' : ''}${gd}</td>
+          <td class="col-pts">${r.points}</td>
+        </tr>`;
+      })
+      .join('');
+
+    const html = `
+      ${exportHeaderHtml('Klasemen')}
+      <table class="standings" style="width:100%">
+        <thead><tr>
+          <th class="col-rank">#</th><th class="col-team">Tim</th><th>M</th><th>M</th><th>S</th><th>K</th><th>GM</th><th>GK</th><th>SG</th><th class="col-pts">Poin</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `klasemen-${slugifyAppName()}.jpg`, `Klasemen ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  async function shareTopSkor() {
+    const scorers = hitungTopSkor();
+    if (scorers.length === 0) {
+      showToast('Belum ada data top skor untuk dibagikan.', 'error');
+      return;
+    }
+    const rows = scorers
+      .map(
+        (s, i) => `
+        <div class="topscorer-row">
+          <div class="topscorer-row__rank">${i + 1}</div>
+          <div>
+            <div class="topscorer-row__player">${escapeHtml(s.player)}</div>
+            <div class="topscorer-row__team">${escapeHtml(s.team)}</div>
+          </div>
+          <div></div>
+          <div class="topscorer-row__goals">${s.goals} gol</div>
+        </div>`
+      )
+      .join('');
+
+    const html = `
+      ${exportHeaderHtml('Top Skor')}
+      <div class="topscorer-list">${rows}</div>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `top-skor-${slugifyAppName()}.jpg`, `Top Skor ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  async function shareMatch(matchId) {
+    const match = DB.getMatches().find((m) => m.id === matchId);
+    if (!match) return;
+    const teams = DB.getTeams();
+    const teamName = (id) => teams.find((t) => t.id === id)?.name || '(tim dihapus)';
+    const scorerText = (list) => list.map((s) => `${escapeHtml(s.player)} (${s.goals})`).join(', ') || '&mdash;';
+
+    const html = `
+      ${exportHeaderHtml('Hasil Pertandingan')}
+      <div class="export-match__score">
+        <span>${escapeHtml(teamName(match.teamAId))}</span>
+        <b>${match.scoreA} &ndash; ${match.scoreB}</b>
+        <span>${escapeHtml(teamName(match.teamBId))}</span>
+      </div>
+      <div class="export-match__scorers">
+        <div><em>${escapeHtml(teamName(match.teamAId))}</em><br>${scorerText(match.scorersA)}</div>
+        <div><em>${escapeHtml(teamName(match.teamBId))}</em><br>${scorerText(match.scorersB)}</div>
+      </div>
+      ${EXPORT_FOOTER_HTML}
+    `;
+    await exportHtmlToJpeg(html, `hasil-pertandingan-${slugifyAppName()}.jpg`, `Hasil Pertandingan ${APP_CONFIG.APP_NAME || 'Liga Kandang'}`);
+  }
+
+  // Hitung posisi X (garis lini, kiper=paling kiri sampai penyerang=paling
+  // kanan) dan Y (menyebar rata secara vertikal antar pemain di lini yang
+  // sama) untuk tiap pemain, dipakai menempatkan pill di lapangan perspektif.
+  function computePitchPositions(format, players) {
+    const catalog = POSITION_CATALOG[format];
+    const maxLine = Math.max(...catalog.map((p) => p.line));
+    const byLine = {};
+    players.forEach((p) => {
+      const line = posLine(format, p.positionCode);
+      if (!byLine[line]) byLine[line] = [];
+      byLine[line].push(p);
+    });
+
+    const positioned = [];
+    Object.keys(byLine).forEach((lineKey) => {
+      const line = parseInt(lineKey, 10);
+      const group = byLine[line];
+      const x = 10 + (maxLine === 0 ? 0 : (line / maxLine) * 72);
+      group.forEach((p, i) => {
+        const count = group.length;
+        const y = count === 1 ? 50 : 15 + i * (70 / (count - 1));
+        positioned.push({ player: p, x, y, isGK: p.positionCode === 'GK' });
+      });
+    });
+    return positioned;
+  }
+
+  function buildLineupPitchExportHtml(team, lu) {
+    const appName = APP_CONFIG.APP_NAME || 'Liga Kandang';
+    const formatLabel = FORMAT_INFO[lu.format]?.label || lu.format;
+    const positions = computePitchPositions(lu.format, lu.players);
+
+    const pillsHtml = positions
+      .map(
+        (pos) => `
+        <div class="export-pitch__player ${pos.isGK ? 'is-gk' : ''}" style="left:${pos.x}%; top:${pos.y}%;">
+          ${pos.isGK ? '<span class="export-pitch__gk-badge">GK</span>' : ''}
+          <span class="export-pitch__name">${escapeHtml(pos.player.name)}</span>
+          <span class="export-pitch__sep">|</span>
+          <span class="export-pitch__pos">${escapeHtml(posShort(lu.format, pos.player.positionCode))}</span>
+        </div>`
+      )
+      .join('');
+
+    return `
+      <div class="export-pitch-card__head">
+        <div class="export-pitch-card__brand">
+          <svg class="export-pitch-card__crest" viewBox="0 0 24 24" width="52" height="52">
+            <defs>
+              <linearGradient id="crestGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#04F5FF"/>
+                <stop offset="50%" stop-color="#00FF85"/>
+                <stop offset="100%" stop-color="#E90052"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 2 L21 5 V11 C21 16 17 20 12 22 C7 20 3 16 3 11 V5 Z" fill="url(#crestGrad)" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          </svg>
+          <div>
+            <div class="export-pitch-card__title">${escapeHtml(appName)} <span class="export-pitch-card__title-sep">|</span> Line Up</div>
+            <div class="export-pitch-card__subtitle">Tim ${escapeHtml(team.name)}</div>
+          </div>
+        </div>
+        <div class="export-pitch-card__badge">${escapeHtml(formatLabel.toUpperCase())} &middot; ${formationString(lu.format, lu.players)}</div>
+      </div>
+
+      <div class="export-pitch">
+        <svg class="export-pitch__svg" viewBox="0 0 1000 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="pitchFill" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.07)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0.015)"/>
+            </linearGradient>
+          </defs>
+          <polygon points="50,0 950,0 1000,500 0,500" fill="url(#pitchFill)" stroke="rgba(255,255,255,0.28)" stroke-width="3"/>
+          <ellipse cx="1000" cy="250" rx="140" ry="140" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+          <rect x="2" y="100" width="128" height="300" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3"/>
+        </svg>
+        ${pillsHtml}
+      </div>
+
+      <div class="export-card__footer export-card__footer--fancy">
+        <span>&#10148;</span> PRODUCED WITH <strong>${escapeHtml(appName.toUpperCase())} ANALYTICS</strong> <span>&#10148;</span>
+      </div>
+    `;
+  }
+
+  async function shareLineup(teamId) {
+    const team = DB.getTeams().find((t) => t.id === teamId);
+    const lu = DB.getAllLineups()[teamId];
+    if (!team || !lu) {
+      showToast('Tim ini belum punya Line Up tersimpan.', 'error');
+      return;
+    }
+    const html = buildLineupPitchExportHtml(team, lu);
+    await exportHtmlToJpeg(html, `lineup-${team.name}-${slugifyAppName()}.jpg`, `Line Up ${team.name}`, 960);
+  }
+
+  document.getElementById('btn-share-klasemen').addEventListener('click', shareStandings);
+  document.getElementById('btn-share-topskor').addEventListener('click', shareTopSkor);
+
+  // ---------------- Init awal ----------------
+  applyAppBranding();
+  authStatus.textContent = 'Memuat data dari GitHub...';
+  await DB.init();
+  applyAuthUI();
+  renderDaftarTimTersimpan();
+  renderTimAwalVsKelola();
+  renderFormPertandingan();
+  renderKlasemen();
+  renderTopSkor();
+  renderFormStartingXI();
+});
