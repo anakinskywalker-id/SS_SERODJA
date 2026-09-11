@@ -1052,7 +1052,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       return ordered
         .map((line) => {
-          const playersInLine = players.filter((p) => posLine(format, p.positionCode) === line);
+          const playersInLine = players
+            .filter((p) => posLine(format, p.positionCode) === line)
+            .slice()
+            .sort((a, b) => {
+              const order = { right: 0, center: 1, left: 2 };
+              const za = order[POSITION_ZONE[a.positionCode] || 'center'];
+              const zb = order[POSITION_ZONE[b.positionCode] || 'center'];
+              return za - zb;
+            });
           if (playersInLine.length === 0) return '';
           const cards = playersInLine
             .map(
@@ -1283,6 +1291,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Hitung posisi X (garis lini, kiper=paling kiri sampai penyerang=paling
   // kanan) dan Y (menyebar rata secara vertikal antar pemain di lini yang
   // sama) untuk tiap pemain, dipakai menempatkan pill di lapangan perspektif.
+  // Kode posisi mana yang "milik" sisi kanan/kiri lapangan (sayap/wing-back)
+  // — sisanya (termasuk CB, CM, CMF, DMF, AMF, CF, SS, FIXO, PIVOT, GK)
+  // dianggap tengah. Dipakai supaya CB selalu tampil di tengah, bukan
+  // ikut ke pinggir hanya karena ada 2 pemain di lini yang sama.
+  const POSITION_ZONE = {
+    RB: 'right', RMF: 'right', RM: 'right', RWF: 'right', ALA_KANAN: 'right',
+    LB: 'left', LMF: 'left', LM: 'left', LWF: 'left', ALA_KIRI: 'left'
+  };
+  const ZONE_ANCHOR = { right: 20, center: 50, left: 80 };
+  const ZONE_RANGE = { right: [8, 32], center: [35, 65], left: [68, 92] };
+
   function computePitchPositions(format, players) {
     const catalog = POSITION_CATALOG[format];
     const maxLine = Math.max(...catalog.map((p) => p.line));
@@ -1298,10 +1317,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       const line = parseInt(lineKey, 10);
       const group = byLine[line];
       const x = 10 + (maxLine === 0 ? 0 : (line / maxLine) * 72);
-      group.forEach((p, i) => {
-        const count = group.length;
-        const y = count === 1 ? 50 : 15 + i * (70 / (count - 1));
-        positioned.push({ player: p, x, y, isGK: p.positionCode === 'GK' });
+
+      // Di dalam satu lini, kelompokkan lagi per zona kanan/tengah/kiri
+      // berdasarkan kode posisinya sendiri — bukan sekadar urutan input.
+      const byZone = { right: [], center: [], left: [] };
+      group.forEach((p) => {
+        const zone = POSITION_ZONE[p.positionCode] || 'center';
+        byZone[zone].push(p);
+      });
+
+      Object.keys(byZone).forEach((zone) => {
+        const zoneGroup = byZone[zone];
+        if (zoneGroup.length === 0) return;
+        const [rangeMin, rangeMax] = ZONE_RANGE[zone];
+        zoneGroup.forEach((p, i) => {
+          const count = zoneGroup.length;
+          const y = count === 1 ? ZONE_ANCHOR[zone] : rangeMin + i * ((rangeMax - rangeMin) / (count - 1));
+          positioned.push({ player: p, x, y, isGK: p.positionCode === 'GK' });
+        });
       });
     });
     return positioned;
