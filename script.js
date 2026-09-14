@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   function refreshCurrentTabAdminAreas() {
+    renderMusimSelector();
     renderDaftarTimTersimpan();
     renderTimAwalVsKelola();
     renderFormPertandingan();
@@ -112,6 +113,107 @@ document.addEventListener('DOMContentLoaded', async () => {
       refreshCurrentTabAdminAreas();
     }
   }
+
+  // ---------------- Musim / Kompetisi ----------------
+  const selectMusim = document.getElementById('select-musim');
+  const musimAdminActions = document.getElementById('musim-admin-actions');
+  const btnMusimBaruToggle = document.getElementById('btn-musim-baru-toggle');
+  const formMusimBaru = document.getElementById('form-musim-baru');
+  const inputMusimBaru = document.getElementById('input-musim-baru');
+  const btnBatalMusimBaru = document.getElementById('btn-batal-musim-baru');
+  const btnMusimRename = document.getElementById('btn-musim-rename');
+  const btnMusimHapus = document.getElementById('btn-musim-hapus');
+
+  function renderMusimSelector() {
+    const list = DB.getMusimList();
+    const activeId = DB.getViewingMusimId();
+    selectMusim.innerHTML = list
+      .map((m) => `<option value="${m.id}" ${m.id === activeId ? 'selected' : ''}>${escapeHtml(m.name)}</option>`)
+      .join('');
+    musimAdminActions.hidden = !DB.isLoggedIn();
+  }
+
+  function refreshAllForMusimChange() {
+    renderDaftarTimTersimpan();
+    renderTimAwalVsKelola();
+    renderFormPertandingan();
+    renderKlasemen();
+    renderTopSkor();
+    renderFormStartingXI();
+    const preview = document.getElementById('tim-lineup-preview');
+    if (preview) preview.innerHTML = '';
+    const pitchWrap = document.getElementById('pitch-preview-wrap');
+    if (pitchWrap) pitchWrap.innerHTML = '';
+  }
+
+  selectMusim.addEventListener('change', () => {
+    DB.setViewingMusim(selectMusim.value);
+    refreshAllForMusimChange();
+  });
+
+  btnMusimBaruToggle.addEventListener('click', () => {
+    formMusimBaru.hidden = !formMusimBaru.hidden;
+    if (!formMusimBaru.hidden) inputMusimBaru.focus();
+  });
+
+  btnBatalMusimBaru.addEventListener('click', () => {
+    formMusimBaru.hidden = true;
+    formMusimBaru.reset();
+  });
+
+  formMusimBaru.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = inputMusimBaru.value.trim();
+    if (!name) return;
+    const submitBtn = formMusimBaru.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await DB.createMusim(name);
+      formMusimBaru.reset();
+      formMusimBaru.hidden = true;
+      renderMusimSelector();
+      refreshAllForMusimChange();
+      showToast(`Musim "${name}" berhasil dibuat.`);
+    } catch (err) {
+      handleWriteError(err);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  btnMusimRename.addEventListener('click', async () => {
+    const list = DB.getMusimList();
+    const current = list.find((m) => m.id === DB.getViewingMusimId());
+    if (!current) return;
+    const newName = prompt('Nama baru untuk musim ini:', current.name);
+    if (!newName || !newName.trim()) return;
+    try {
+      await DB.renameMusim(current.id, newName.trim());
+      renderMusimSelector();
+      showToast('Nama musim berhasil diubah.');
+    } catch (err) {
+      handleWriteError(err);
+    }
+  });
+
+  btnMusimHapus.addEventListener('click', async () => {
+    const list = DB.getMusimList();
+    const current = list.find((m) => m.id === DB.getViewingMusimId());
+    if (!current) return;
+    if (list.length <= 1) {
+      showToast('Tidak bisa menghapus satu-satunya musim yang ada.', 'error');
+      return;
+    }
+    if (!confirm(`Hapus musim "${current.name}" beserta semua tim, pertandingan, dan Line Up di dalamnya? Musim lain tidak akan terpengaruh. Tindakan ini tidak bisa dibatalkan.`)) return;
+    try {
+      await DB.deleteMusim(current.id);
+      renderMusimSelector();
+      refreshAllForMusimChange();
+      showToast(`Musim "${current.name}" berhasil dihapus.`);
+    } catch (err) {
+      handleWriteError(err);
+    }
+  });
 
   // ---------------- TAB 1: Setup Tim ----------------
   const formJumlahTim = document.getElementById('form-jumlah-tim');
@@ -364,6 +466,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const scorerWarning = document.getElementById('scorer-warning');
   const btnSubmitPertandingan = document.getElementById('btn-submit-pertandingan');
   const btnBatalEditPertandingan = document.getElementById('btn-batal-edit-pertandingan');
+  const inputTanggalPertandingan = document.getElementById('input-tanggal-pertandingan');
+
+  function todayIso() {
+    const d = new Date();
+    const tz = d.getTimezoneOffset() * 60000;
+    return new Date(d - tz).toISOString().slice(0, 10);
+  }
 
   let editingMatchId = null; // null = mode "tambah baru", isi = sedang mengedit match ini
 
@@ -388,6 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (teams.length > 1) selectTimB.selectedIndex = 1;
 
     updateScorerLabels();
+    if (!inputTanggalPertandingan.value) inputTanggalPertandingan.value = todayIso();
     renderRiwayatPertandingan();
   }
 
@@ -450,6 +560,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     formPertandingan.reset();
     scorerListA.innerHTML = '';
     scorerListB.innerHTML = '';
+    inputTanggalPertandingan.value = todayIso();
     btnSubmitPertandingan.textContent = 'Simpan Hasil Pertandingan';
     btnBatalEditPertandingan.hidden = true;
     updateScorerLabels();
@@ -463,6 +574,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!match) return;
 
     editingMatchId = matchId;
+    inputTanggalPertandingan.value = match.date || todayIso();
     selectTimA.value = match.teamAId;
     selectTimB.value = match.teamBId;
     skorA.value = match.scoreA;
@@ -484,6 +596,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const teamAId = selectTimA.value;
     const teamBId = selectTimB.value;
+    const tanggal = inputTanggalPertandingan.value;
+    if (!tanggal) {
+      showToast('Isi tanggal pertandingan terlebih dahulu.', 'error');
+      return;
+    }
     if (teamAId === teamBId) {
       showToast('Tim tuan rumah dan tim tamu tidak boleh sama.', 'error');
       return;
@@ -509,10 +626,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnSubmitPertandingan.textContent = 'Menyimpan ke GitHub...';
     try {
       if (editingMatchId) {
-        await DB.updateMatch(editingMatchId, { teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        await DB.updateMatch(editingMatchId, { teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB, date: tanggal });
         showToast('Pertandingan berhasil diperbarui.');
       } else {
-        await DB.addMatch({ teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB });
+        await DB.addMatch({ teamAId, teamBId, scoreA: nA, scoreB: nB, scorersA, scorersB, date: tanggal });
         showToast('Pertandingan berhasil disimpan.');
       }
       resetFormPertandinganKeModeTambah();
@@ -536,6 +653,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     return result;
   }
 
+  const BULAN_SINGKAT = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+  function formatTanggalIndo(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-').map(Number);
+    if (!y || !m || !d) return dateStr;
+    return `${d} ${BULAN_SINGKAT[m - 1]} ${y}`;
+  }
+
   function renderRiwayatPertandingan() {
     const box = document.getElementById('riwayat-pertandingan');
     const matches = DB.getMatches();
@@ -550,11 +675,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     box.innerHTML = matches
       .slice()
-      .reverse()
+      .sort((a, b) => (b.date || b.createdAt || '').localeCompare(a.date || a.createdAt || ''))
       .map((m) => {
         const scorerText = (list) => list.map((s) => `${escapeHtml(s.player)} (${s.goals})`).join(', ') || '&mdash;';
         return `
         <div class="match-card">
+          ${m.date ? `<div class="match-card__date">${escapeHtml(formatTanggalIndo(m.date))}</div>` : ''}
           <div class="match-card__score">
             ${escapeHtml(teamName(m.teamAId))} <b>${m.scoreA} &ndash; ${m.scoreB}</b> ${escapeHtml(teamName(m.teamBId))}
           </div>
@@ -1273,7 +1399,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scorerText = (list) => list.map((s) => `${escapeHtml(s.player)} (${s.goals})`).join(', ') || '&mdash;';
 
     const html = `
-      ${exportHeaderHtml('Hasil Pertandingan')}
+      ${exportHeaderHtml(match.date ? `Hasil Pertandingan &middot; ${formatTanggalIndo(match.date)}` : 'Hasil Pertandingan')}
       <div class="export-match__score">
         <span>${escapeHtml(teamName(match.teamAId))}</span>
         <b>${match.scoreA} &ndash; ${match.scoreB}</b>
@@ -1418,6 +1544,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   authStatus.textContent = 'Memuat data dari GitHub...';
   await DB.init();
   applyAuthUI();
+  renderMusimSelector();
   renderDaftarTimTersimpan();
   renderTimAwalVsKelola();
   renderFormPertandingan();
