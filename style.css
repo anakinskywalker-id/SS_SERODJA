@@ -175,6 +175,53 @@ button { font-family: inherit; }
   font-weight: 500;
 }
 
+/* ---------------- Musim / Kompetisi ---------------- */
+
+.musim-bar {
+  background: var(--pl-purple-3);
+  border-bottom: 1px solid var(--pl-border);
+  padding: 10px 20px;
+}
+
+.musim-bar__inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.musim-bar label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--pl-ink-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.musim-bar select {
+  min-width: 160px;
+}
+
+.musim-bar__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.musim-baru-form {
+  max-width: 1000px;
+  margin: 10px auto 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.musim-baru-form input {
+  flex: 1;
+  min-width: 200px;
+}
+
 /* ---------------- Tabs ---------------- */
 
 .tabs {
@@ -321,6 +368,8 @@ label {
 .row-inline input { width: 140px; }
 
 .field { display: flex; flex-direction: column; gap: 6px; }
+.field--date { max-width: 220px; margin-bottom: 18px; }
+.field--date input { width: 100%; }
 
 /* ---------------- Team setup ---------------- */
 
@@ -525,6 +574,16 @@ label {
   gap: 12px;
   flex-wrap: wrap;
   background: rgba(255,255,255,0.02);
+}
+
+.match-card__date {
+  flex-basis: 100%;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--pl-ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  order: -1;
 }
 
 .match-card__score {
@@ -1161,3 +1220,4 @@ table.standings td.col-pts {
   .pitch__player-name { font-size: 10px; }
   .pitch__player-pos { font-size: 8.5px; }
 }
+
