@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title id="page-title">SS SERODJA; Pencatat Kompetisi Sepakbola</title>
+<title id="page-title">SS SERODJA &mdash; Pencatat Kompetisi Sepakbola</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -47,9 +47,28 @@
 </div>
 
 <header class="hero">
-  <h1 id="hero-title">Liga SS SERODJA</h1>
+  <h1 id="hero-title">SS SERODJA</h1>
   <p>Catat pertandingan, klasemen &amp; starting XI kompetisimu</p>
 </header>
+
+<div class="musim-bar">
+  <div class="musim-bar__inner">
+    <label for="select-musim">Musim</label>
+    <select id="select-musim"></select>
+
+    <div id="musim-admin-actions" class="musim-bar__actions" hidden>
+      <button type="button" id="btn-musim-baru-toggle" class="btn btn--ghost btn--small">+ Musim Baru</button>
+      <button type="button" id="btn-musim-rename" class="btn btn--ghost btn--small">Ubah Nama</button>
+      <button type="button" id="btn-musim-hapus" class="btn btn--danger btn--small">Hapus Musim Ini</button>
+    </div>
+  </div>
+
+  <form id="form-musim-baru" class="musim-baru-form" hidden>
+    <input type="text" id="input-musim-baru" placeholder="Nama musim, mis. Musim 2027" required>
+    <button type="submit" class="btn btn--primary btn--small">Buat Musim</button>
+    <button type="button" id="btn-batal-musim-baru" class="btn btn--ghost btn--small">Batal</button>
+  </form>
+</div>
 
 <nav class="tabs" aria-label="Navigasi bagian aplikasi">
   <button class="tabs__btn is-active" data-tab="setup">Tim</button>
@@ -114,6 +133,10 @@
 
     <div id="pertandingan-admin-area">
       <form id="form-pertandingan" class="match-form">
+        <div class="field field--date">
+          <label for="input-tanggal-pertandingan">Tanggal Pertandingan</label>
+          <input type="date" id="input-tanggal-pertandingan" required>
+        </div>
         <div class="match-form__teams">
           <div class="team-side">
             <label for="select-tim-a">Tim Tuan Rumah</label>
