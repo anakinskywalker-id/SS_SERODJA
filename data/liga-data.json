@@ -188,72 +188,27 @@
             {
               "id": "p3",
               "name": "Rayyan",
-              "positionCode": "RM"
+              "positionCode": "CB"
             },
             {
               "id": "p4",
               "name": "Paman",
-              "positionCode": "CM"
+              "positionCode": "CB"
             },
             {
               "id": "p5",
               "name": "Fai",
-              "positionCode": "LM"
-            },
-            {
-              "id": "p6",
-              "name": "Fajri",
-              "positionCode": "CF"
-            },
-            {
-              "id": "p7",
-              "name": "Zaamm",
-              "positionCode": "CF"
-            }
-          ]
-        },
-        "team_murplsci_gch8m": {
-          "format": "mini",
-          "players": [
-            {
-              "id": "p0",
-              "name": "Irsyad",
-              "positionCode": "GK"
-            },
-            {
-              "id": "p1",
-              "name": "Galang",
               "positionCode": "CB"
             },
             {
-              "id": "p2",
-              "name": "La_Pulga",
+              "id": "p6",
+              "name": "Fajri/Walijo",
               "positionCode": "CB"
             },
             {
-              "id": "p3",
-              "name": "Musa",
-              "positionCode": "LM"
-            },
-            {
-              "id": "p4",
-              "name": "Ihsan",
-              "positionCode": "CM"
-            },
-            {
-              "id": "p5",
-              "name": "Tomi",
-              "positionCode": "RM"
-            },
-            {
-              "id": "p6",
-              "name": "Fauzan",
-              "positionCode": "CF"
-            },
-            {
               "id": "p7",
-              "name": "Ustadz Renan",
-              "positionCode": "CF"
+              "name": "Zamm",
+              "positionCode": "CB"
             }
           ]
         }
