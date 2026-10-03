@@ -4,6 +4,11 @@
       "id": "musim_mu0z02h1_bilrf",
       "name": "Musim 2026",
       "createdAt": "2026-09-14T08:17:49.957Z"
+    },
+    {
+      "id": "musim_murqdyn5_8yn37",
+      "name": "FFA Cup #7",
+      "createdAt": "2026-10-03T01:46:28.385Z"
     }
   ],
   "dataByMusim": {
@@ -166,98 +171,13 @@
               "positionCode": "CF"
             }
           ]
-        },
-        "team_murplbwm_qc6fu": {
-          "format": "mini",
-          "players": [
-            {
-              "id": "p0",
-              "name": "Nahrul",
-              "positionCode": "GK"
-            },
-            {
-              "id": "p1",
-              "name": "Fariz",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p2",
-              "name": "Beng",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p3",
-              "name": "Rayyan",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p4",
-              "name": "Paman",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p5",
-              "name": "Fai",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p6",
-              "name": "Fajri/Walijo",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p7",
-              "name": "Zamm",
-              "positionCode": "CB"
-            }
-          ]
-        },
-        "team_murplsci_gch8m": {
-          "format": "mini",
-          "players": [
-            {
-              "id": "p0",
-              "name": "Irsyad",
-              "positionCode": "GK"
-            },
-            {
-              "id": "p1",
-              "name": "Galang",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p2",
-              "name": "La_pulga",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p3",
-              "name": "Musa",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p4",
-              "name": "Ihsan",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p5",
-              "name": "Tomi",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p6",
-              "name": "Fauzan",
-              "positionCode": "CB"
-            },
-            {
-              "id": "p7",
-              "name": "Ustaz Renan",
-              "positionCode": "CB"
-            }
-          ]
         }
       }
+    },
+    "musim_murqdyn5_8yn37": {
+      "teams": [],
+      "matches": [],
+      "lineups": {}
     }
   }
 }
