@@ -4,11 +4,6 @@
       "id": "musim_mu0z02h1_bilrf",
       "name": "FFA Cup #7",
       "createdAt": "2026-09-14T08:17:49.957Z"
-    },
-    {
-      "id": "musim_murqdyn5_8yn37",
-      "name": "FFA Cup #7",
-      "createdAt": "2026-10-03T01:46:28.385Z"
     }
   ],
   "dataByMusim": {
@@ -173,11 +168,6 @@
           ]
         }
       }
-    },
-    "musim_murqdyn5_8yn37": {
-      "teams": [],
-      "matches": [],
-      "lineups": {}
     }
   }
 }
