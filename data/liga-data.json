@@ -166,6 +166,51 @@
               "positionCode": "CF"
             }
           ]
+        },
+        "team_murplbwm_qc6fu": {
+          "format": "mini",
+          "players": [
+            {
+              "id": "p0",
+              "name": "Nahrul",
+              "positionCode": "GK"
+            },
+            {
+              "id": "p1",
+              "name": "Fariz",
+              "positionCode": "CB"
+            },
+            {
+              "id": "p2",
+              "name": "Beng",
+              "positionCode": "CB"
+            },
+            {
+              "id": "p3",
+              "name": "Rayyan",
+              "positionCode": "RM"
+            },
+            {
+              "id": "p4",
+              "name": "Paman",
+              "positionCode": "CM"
+            },
+            {
+              "id": "p5",
+              "name": "Fai",
+              "positionCode": "LM"
+            },
+            {
+              "id": "p6",
+              "name": "Fajri",
+              "positionCode": "CF"
+            },
+            {
+              "id": "p7",
+              "name": "Zaamm",
+              "positionCode": "CF"
+            }
+          ]
         }
       }
     }
