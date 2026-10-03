@@ -37,42 +37,42 @@
           "players": [
             {
               "id": "p0",
-              "name": "Wakabayashi",
+              "name": "Almubarak",
               "positionCode": "GK"
             },
             {
               "id": "p1",
-              "name": "Virgil Vandijk",
+              "name": "Naufal",
               "positionCode": "CB"
             },
             {
               "id": "p2",
-              "name": "Rio Ferdinand",
+              "name": "Tsani",
               "positionCode": "CB"
             },
             {
               "id": "p3",
-              "name": "Bahlil",
+              "name": "Romaido",
               "positionCode": "CM"
             },
             {
               "id": "p4",
-              "name": "Si E",
+              "name": "Agung S",
               "positionCode": "RM"
             },
             {
               "id": "p5",
-              "name": "Si F",
+              "name": "Ghofar",
               "positionCode": "LM"
             },
             {
               "id": "p6",
-              "name": "Si G",
+              "name": "El",
               "positionCode": "CF"
             },
             {
               "id": "p7",
-              "name": "Si H",
+              "name": "Umar",
               "positionCode": "CF"
             }
           ]
