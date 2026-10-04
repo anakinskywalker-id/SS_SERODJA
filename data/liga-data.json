@@ -130,6 +130,26 @@
             }
           ],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut561d7_eehgj",
+          "createdAt": "2026-10-04T01:27:59.083Z",
+          "teamAId": "team_mttdu3qx_80xwd",
+          "teamBId": "team_mttdu3qx_w8y3a",
+          "scoreA": 3,
+          "scoreB": 0,
+          "scorersA": [
+            {
+              "player": "Romaido",
+              "goals": 1
+            },
+            {
+              "player": "Umar",
+              "goals": 2
+            }
+          ],
+          "scorersB": [],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
