@@ -171,6 +171,22 @@
             }
           ],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut5xmko_kpuoc",
+          "createdAt": "2026-10-04T01:49:26.280Z",
+          "teamAId": "team_mttdu3qx_80xwd",
+          "teamBId": "team_murpl4u2_km4zc",
+          "scoreA": 1,
+          "scoreB": 0,
+          "scorersA": [
+            {
+              "player": "Umar",
+              "goals": 1
+            }
+          ],
+          "scorersB": [],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
