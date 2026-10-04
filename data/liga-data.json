@@ -150,6 +150,27 @@
           ],
           "scorersB": [],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut5kr1i_504ks",
+          "createdAt": "2026-10-04T01:39:25.542Z",
+          "teamAId": "team_murplbwm_qc6fu",
+          "teamBId": "team_murplsci_gch8m",
+          "scoreA": 1,
+          "scoreB": 2,
+          "scorersA": [
+            {
+              "player": "Walijo",
+              "goals": 1
+            }
+          ],
+          "scorersB": [
+            {
+              "player": "Musa",
+              "goals": 2
+            }
+          ],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
