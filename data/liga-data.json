@@ -187,6 +187,31 @@
           ],
           "scorersB": [],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut66cot_zbb2r",
+          "createdAt": "2026-10-04T01:56:13.373Z",
+          "teamAId": "team_mttdu3qx_w8y3a",
+          "teamBId": "team_murplsci_gch8m",
+          "scoreA": 1,
+          "scoreB": 2,
+          "scorersA": [
+            {
+              "player": "Danawa",
+              "goals": 1
+            }
+          ],
+          "scorersB": [
+            {
+              "player": "Musa",
+              "goals": 1
+            },
+            {
+              "player": "Mufid",
+              "goals": 1
+            }
+          ],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
