@@ -87,6 +87,17 @@
           ],
           "scorersB": [],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut3ying_uffcc",
+          "createdAt": "2026-10-04T00:54:08.620Z",
+          "teamAId": "team_murpl4u2_km4zc",
+          "teamBId": "team_mttdu3qx_w8y3a",
+          "scoreA": 0,
+          "scoreB": 0,
+          "scorersA": [],
+          "scorersB": [],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
