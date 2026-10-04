@@ -114,6 +114,22 @@
             }
           ],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut4rtgl_1zla7",
+          "createdAt": "2026-10-04T01:16:55.653Z",
+          "teamAId": "team_murpl4u2_km4zc",
+          "teamBId": "team_murplbwm_qc6fu",
+          "scoreA": 0,
+          "scoreB": 1,
+          "scorersA": [],
+          "scorersB": [
+            {
+              "player": "Fajri",
+              "goals": 1
+            }
+          ],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
