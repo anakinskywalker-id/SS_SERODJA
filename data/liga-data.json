@@ -98,6 +98,22 @@
           "scorersA": [],
           "scorersB": [],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut4d6f8_irri0",
+          "createdAt": "2026-10-04T01:05:32.612Z",
+          "teamAId": "team_murplsci_gch8m",
+          "teamBId": "team_mttdu3qx_80xwd",
+          "scoreA": 0,
+          "scoreB": 2,
+          "scorersA": [],
+          "scorersB": [
+            {
+              "player": "Agung S",
+              "goals": 2
+            }
+          ],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
