@@ -71,6 +71,22 @@
             }
           ],
           "date": "2026-10-04"
+        },
+        {
+          "id": "match_mut3ikw4_xjf11",
+          "createdAt": "2026-10-04T00:41:45.028Z",
+          "teamAId": "team_mttdu3qx_80xwd",
+          "teamBId": "team_murplbwm_qc6fu",
+          "scoreA": 1,
+          "scoreB": 0,
+          "scorersA": [
+            {
+              "player": "Elzio",
+              "goals": 1
+            }
+          ],
+          "scorersB": [],
+          "date": "2026-10-04"
         }
       ],
       "lineups": {
