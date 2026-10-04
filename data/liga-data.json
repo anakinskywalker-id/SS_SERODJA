@@ -30,7 +30,24 @@
           "name": "Biru"
         }
       ],
-      "matches": [],
+      "matches": [
+        {
+          "id": "match_mut2n2wl_ai2lx",
+          "createdAt": "2026-10-04T00:17:15.381Z",
+          "teamAId": "team_mttdu3qx_w8y3a",
+          "teamBId": "team_murplbwm_qc6fu",
+          "scoreA": 0,
+          "scoreB": 1,
+          "scorersA": [],
+          "scorersB": [
+            {
+              "player": "Paman Pinus",
+              "goals": 1
+            }
+          ],
+          "date": "2026-10-04"
+        }
+      ],
       "lineups": {
         "team_mttdu3qx_80xwd": {
           "format": "mini",
